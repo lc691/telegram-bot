@@ -1,0 +1,16 @@
+vip_status = {
+    "title": "🔥 **Upgrade to VIP Now!** 🔥",
+    "intro": "Enjoy unlimited access to your favorite videos without any interruptions! 🚀",
+    "status_header": "✅ **Your VIP Status**",
+    "user_id": "👤 User ID",
+    "vip_code": "🔗 VIP Code",
+    "akses_harian": "🎞️ Access Today",
+    "subscription": "💳 Subscription",
+    "subscription_aktif": "✅ Active",
+    "subscription_tidak": "❌ Inactive",
+    "detail_header": "📄 **Your VIP Details:**",
+    "aktif_dari": "⏳ Active From",
+    "berakhir": "🛑 Ends On",
+    "jumlah_beli": "⭐️ **VIP Purchases:**",
+    "closing": "💎 **Join VIP Today!** Type /vip to upgrade and unlock all benefits! 🎉",
+}

@@ -1,0 +1,91 @@
+###############################
+# 🔧 CORE UTILITIES
+###############################
+anyio==4.12.0
+attrs==25.4.0
+cachetools==6.2.2
+certifi==2025.11.12
+charset-normalizer==3.4.4
+filelock==3.20.0
+idna==3.11
+packaging==25.0
+platformdirs==4.5.0
+psutil==7.1.3
+PyYAML==6.0.3
+regex==2025.11.3
+six==1.17.0
+typing_extensions==4.15.0
+urllib3==2.5.0
+colorama==0.4.6
+
+# OPTIONAL – hanya dipakai saat render chart
+matplotlib==3.10.7
+
+###############################
+# 🌐 ASYNC & HTTP
+###############################
+aiohttp==3.9.5
+aiosignal==1.4.0
+httpx==0.28.1
+httpcore==1.0.9
+requests==2.32.5
+yarl==1.9.4
+multidict==6.7.0
+PySocks==1.7.1
+
+###############################
+# 🗃 DATABASE
+###############################
+asyncpg==0.31.0
+psycopg2-binary==2.9.11
+pandas==2.3.3
+pytz==2025.2
+
+###############################
+# 🤖 ML / AI (CLIP MURNI)
+###############################
+torch==2.9.1
+--extra-index-url https://download.pytorch.org/whl/cpu
+transformers==4.57.3
+huggingface-hub==0.36.0
+tokenizers==0.22.1
+safetensors==0.7.0
+numpy>=1.23,<1.27
+scipy>=1.9,<1.11
+faiss-cpu==1.13.1
+tqdm==4.67.1
+
+###############################
+# 🖼 IMAGE & OCR
+###############################
+pillow==12.0.0
+opencv-python-headless<4.9
+pytesseract==0.3.13
+
+###############################
+# 🤖 TELEGRAM BOT
+###############################
+Pyrogram==2.0.106
+TgCrypto==1.2.5
+pyaes==1.6.1
+
+###############################
+# 🌐 WEB / API
+###############################
+fastapi==0.123.9
+starlette==0.50.0
+uvicorn==0.38.0
+h11==0.16.0
+
+###############################
+# 📅 SCHEDULER
+###############################
+APScheduler==3.11.1
+schedule==1.2.2
+
+###############################
+# 🔧 UTILITIES
+###############################
+python-dotenv==1.2.1
+python-slugify==8.0.4
+python-dateutil==2.9.0.post0

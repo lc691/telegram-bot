@@ -1,0 +1,7 @@
+bots/caridrama_bot/
+├─ infrastructure/
+│  └─ embeddings/
+│     ├─ clip_model.py            🔒 (MODEL + encode)
+│     ├─ image_fetcher.py         🌐 (fetch_image)
+│     ├─ embedding_sync_service.py 🔄 (sinkronisasi utama)
+│     └─ embedding_schema.py      🗄️ (ensure column / migration ringan)

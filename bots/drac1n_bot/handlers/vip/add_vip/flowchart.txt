@@ -1,0 +1,46 @@
+[Start] --> [Validasi Admin]
+   |
+   v
+[Cek FSM Aktif?] --Yes--> [Batalkan & Info]
+   |
+   No
+   |
+[Set Step: ask_user_id] --> [Minta Input user_id]
+   |
+   v
+[Input user_id] --> [Validasi Format user_id?]
+   |                          |
+   No                         Yes
+   |                          |
+[Error minta ulang]       [Cek Status VIP user]
+                              |
+                        [User ditemukan?]
+                              |          \
+                             No          Yes
+                             |             |
+                   [Error minta user mulai bot]   [Set Step: waiting_package]
+                                            |     Kirim pilihan paket VIP
+                                            v
+                             [Admin pilih paket VIP]
+                                   |
+                             [Validasi paket]
+                                   |
+                             [Set Step: waiting_confirmation]
+                                   |
+                          [Tampilkan konfirmasi (Yes/No)]
+                                   |
+                    ------------------------------------
+                    |                                  |
+                  [Yes]                               [No]
+                    |                                  |
+          [Proses aktivasi VIP]              [Batalkan proses & clear state]
+                    |
+         [Cek duplicate / sedang proses]
+                    |
+             [Aktivasi di DB]
+                    |
+           [Kirim pesan sukses]
+                    |
+             [Clear semua state]
+                    |
+                 [Selesai]

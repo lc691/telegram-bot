@@ -1,0 +1,150 @@
+####################################
+# Python
+####################################
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+####################################
+# Virtual Environments
+####################################
+.venv/
+venv/
+env/
+ENV/
+env.bak/
+venv.bak/
+
+####################################
+# Environment Variables / Secrets
+####################################
+.env
+.env.*
+!.env.example
+
+####################################
+# Telegram / Pyrogram / Telethon
+####################################
+*.session
+*.session-journal
+
+####################################
+# Database & Runtime Files
+####################################
+*.db
+*.sqlite3
+*.sqlite3-journal
+*.dump
+*.sql
+
+####################################
+# Logs
+####################################
+*.log
+log/
+logs/
+
+####################################
+# Build / Packaging
+####################################
+build/
+dist/
+downloads/
+eggs/
+.eggs/
+wheels/
+*.egg-info/
+*.egg
+.Python
+MANIFEST
+.installed.cfg
+
+####################################
+# PyInstaller
+####################################
+*.spec
+*.manifest
+
+####################################
+# Test / Coverage
+####################################
+.coverage
+.coverage.*
+.cache/
+htmlcov/
+.tox/
+.nox/
+.pytest_cache/
+nosetests.xml
+coverage.xml
+*.cover
+
+####################################
+# Jupyter / IPython
+####################################
+.ipynb_checkpoints/
+profile_default/
+ipython_config.py
+
+####################################
+# Type Checker / Linter
+####################################
+.mypy_cache/
+.dmypy.json
+.pyre/
+.pytype/
+.ruff_cache/
+
+####################################
+# Dependency Managers
+####################################
+.pdm.toml
+.pdm-python
+.pdm-build/
+__pypackages__/
+
+####################################
+# Docs
+####################################
+docs/_build/
+site/
+
+####################################
+# IDE / Editor
+####################################
+.spyderproject
+.spyproject
+.ropeproject
+.idea/
+.vscode/
+.cache/
+
+####################################
+# Celery
+####################################
+celerybeat-schedule
+celerybeat.pid
+
+####################################
+# OS Files
+####################################
+.DS_Store
+Thumbs.db
+
+
+####################################
+# AI / ML Models
+####################################
+*.mdl
+*.pt
+*.pth
+*.onnx
+*.ckpt
+*.safetensors
+*.bin
+
+####################################
+# HuggingFace Cache
+####################################
+.hf_cache/

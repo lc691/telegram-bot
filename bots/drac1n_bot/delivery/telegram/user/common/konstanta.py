@@ -1,0 +1,2 @@
+PAGE_SIZE = 10
+MAX_PAGE = 5  # 5 x 10 = Top 50

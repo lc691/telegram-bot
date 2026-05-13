@@ -1,0 +1,364 @@
+ telegram-bot-template/
+├── bot/
+│	├── dcst_mbot/
+│	│	├── commands/
+│	│	│	├── __init__.py
+│	│	│	├── dcst_commands.py
+│	│	│
+│	│	├── handlers/
+│	│	│	├── __init__.py
+│	│	│	├── handler_forwarded_message.py
+│	│	│	├── handler_repost.py
+│	│   │
+│	│	├── register/
+│	│		├── __init__.py
+│	│		├── register_dcst.py
+│	│
+│	├── drac1n_mbot/
+│	│	├── callback/
+│	│	│	│   ├── vip/
+│	│	│	│       ├── __init__.py
+│	│	│	│       ├── exact_routes.py
+│	│	│	│       ├── global_vip_callback_handler.py
+│	│	│	│       ├── regex_routes.py
+│	│	│	│       ├── vip_menu_handler.py
+│	│	│	│
+│	│	│	├── callback_handler_admin.py
+│	│	│	├── callback_handler_vip.py
+│	│	│
+│	│	├── commands/
+│	│	│	├── __init__.py
+│	│	│	├── drac1n_commands.py
+│	│	│
+│	│	├── constants/
+│	│	│	├── __init__.py
+│	│	│	├── menu_definitions.py
+│	│	│
+│	│	├── decorators/
+│	│	│	├── __init__.py
+│	│	│	├── admin_only.py
+│	│	│	├── decorators.py
+│	│	│
+│	│	├── handlers/
+│	│	│	├── admin/
+│	│	│	│	├── __init__.py
+│	│	│	│	├── admin_add.py
+│	│	│	│	├── admin_add_confirmation.py
+│	│	│	│	├── admin_list.py
+│	│	│	│	├── admin_list_page.py
+│	│	│	│	├── admin_list_detail.py
+│	│	│	│	├── admin_remove.py
+│	│	│	│	├── admin_remove_confirmation.py
+│	│	│	│	├── admin_update.py
+│	│	│	│	├── admin_update_confirmation.py
+│	│	│	│	├── handler_user.py
+│	│	│	│
+│	│	│	├── logic/
+│	│	│	│	├── __init__.py
+│	│	│	│	├── logic_user_list.py
+│	│	│	│	├── markup_user_list.py
+│	│	│	│	├── parser_user_query.py
+│	│	│	│
+│	│	│	├── source_film/
+│	│	│	│
+│	│	│	├── user/
+│	│	│	│	├── __init__.py
+│	│	│	│	├── handler_donasi.py
+│	│	│	│	├── handler_request.py
+│	│	│	│	├── handler_start.py
+│	│	│	│	├── handler_status.py
+│	│	│	│	├── handler_vip.py
+│	│	│	│
+│	│	│	├── vip/
+│	│	│	│   │   ├── add_vip/
+│	│	│	│   │   │   ├── __init__.py
+│	│	│	│   │   │   ├── vip_add_confirmation.py
+│	│	│	│   │   │   ├── vip_add_process.py
+│	│	│	│   │   │   ├── vip_add_step.py
+│	│	│	│   │   │   ├── vip_add.py
+│	│	│	│   │   │   ├── vip_ask_user_id.py
+│	│	│	│   │   │   ├── vip_package_selection.py
+│	│	│	│   │   │
+│	│	│	│   │   ├── delete_vip/
+│	│	│	│   │   │   ├── __init__.py
+│	│	│	│   │   │   ├── vip_delete_confirmation.py
+│	│	│	│   │   │   ├── vip_delete_process.py
+│	│	│	│   │   │   ├── vip_delete.py
+│	│	│	│   │   │   ├── vip_package_selection.py
+│	│	│	│   │   │
+│	│	│	│   │   ├── extend_vip/
+│	│	│	│   │   │   ├── __init__.py
+│	│	│	│   │   │   ├── vip_extend_confirmation.py
+│	│	│	│   │   │   ├── vip_extend_process.py
+│	│	│	│   │   │   ├── vip_extend.py
+│	│	│	│   │   │   ├── vip_extend_selection.py
+│	│	│	│   │   │
+│	│	│	│   │   ├── reset_vip/
+│	│	│	│   │       ├── __init__.py
+│	│	│	│   │       ├── vip_reset_confirmation.py
+│	│	│	│   │       ├── vip_reset_all.py
+│	│	│	│   │       ├── vip_reset.py
+│	│	│	│   │
+│	│	│	│   ├── vip_stats.py
+│	│	│	│
+│	│	│	├── __init__.py
+│	│	│	├── admin_inspect_command.py
+│	│	│	├── handler_channel.py
+│	│	│	├── handler_new_file.py
+│	│	│
+│	│	├── register/
+│	│	│	├── __init__.py
+│	│	│	├── register_drac1n.py
+│	│	│
+│	│	├── repository/
+│	│	│	├── __init__.py
+│	│	│	├── channel_repository.py
+│	│	│	├── request_source_repository.py
+│	│	│
+│	│	├── router/
+│	│	│	├── __init__.py
+│	│	│	├── admin_text_router.py
+│	│	│	├── message_handler.py
+│	│	│	├── request_text_router.py
+│	│	│	├── vip_text_router.py
+│	│	│
+│	│	├── services/
+│	│	│	├── __init__.py
+│	│	│	├── channel_verification.py
+│	│	│	├── file_service.py
+│	│	│	├── service_donasi.py
+│	│	│	├── user_service.py
+│	│	│	├── vip_stats_service.py
+│	│	│
+│	│	├── ui/
+│	│	│	├── __init__.py
+│	│	│	├── admin_tools.py
+│	│	│	├── dashboard_handler.py
+│	│	│	├── dashboard.py
+│	│	│	├── markup_dashboard.py
+│	│	│	├── vip_tools.py
+│	│	│
+│	│	├── utils/
+│	│		├── __init__.py
+│	│		├── channel_markup_factory.py
+│	│		├── media_handler.py
+│	│		├── request_markup_factory.py
+│	│		├── text_formatter.py
+│	│		├── types.py
+│	│	    ├── vip_auto_cleanup.py
+│	│		├── vip_donation_chart.py
+│	│		├── vip_keyboard_factory.py
+│	│
+│	├──utbkvip_bot/
+│	│	├── assets/
+│	│	│       ├── fonts/
+│	│	│              ├── __init__.py
+│	│	│              ├── DejaVuSans-Bold.ttf
+│	│	│              ├── DejaVuSans.ttf
+│	│	│
+│	│	├── assets/
+│	│	│       ├── limit_perday.py
+│	│	│       ├── permissions.py
+│	│	│       ├── rate_limit.py
+│	│	│
+│	│	├── exam/
+│	│	│       ├── __init__.py
+│	│	│       ├── back_to_exam.py
+│	│	│       ├── callback_exam.py
+│	│	│       ├── category.py
+│	│	│       ├── nav_page.py
+│	│	│       ├── nav_question.py
+│	│	│       ├── next_question.py
+│	│	│       ├── pause_resume.py
+│	│	│       ├── review_exam.py
+│	│	│       ├── send_result.py
+│	│	│       ├── start_exam.py
+│	│	│       ├── stop_exam.py
+│	│	│       ├── toggle_mark.py
+│	│	│
+│	│	├── handlers/
+│	│	│       ├── __init__.py
+│	│	│       ├── answer_handler.py
+│	│	│       ├── riwayat_handler.py
+│	│	│       ├── start_handler.py
+│	│	│       ├── status_handler.py
+│	│	│       ├── ujian_handler.py
+│	│	│       ├── next_question.py
+│	│	│       ├── vip_handler.py
+│	│	│
+│	│	├── questions/
+│	│	│       ├── csv/
+│	│	│       ├── exel/
+│	│	│       ├── __init__.py
+│	│	│       ├── import_all_csv_questions.py
+│	│	│
+│	│	├── utbk/
+│	│	│       ├── __init__.py
+│	│	│       ├── jawaban_user.py
+│	│	│       ├── riwayat_history.py
+│	│	│       ├── session.py
+│	│	│       ├── soal_management.py
+│	│	│       ├── user_management.py
+│	│	│       ├── utb_session.py
+│	│	│       ├── vip_management.py
+│	│	│
+│	│	├── utils/
+│	│	│       ├── __init__.py
+│	│	│       ├── build_question.py
+│	│	│       ├── clear_old_message.py
+│	│	│       ├── countdown.py
+│	│	│       ├── exam_utils.py
+│	│	│       ├── generate_button.py
+│	│	│       ├── logger_per_user.py
+│	│	│       ├── navigation.py
+│	│	│       ├── pdf_generator.py
+│	│	│       ├── required_channel.py
+│	│	│       ├── send_question_by_number.py
+│	│	│       ├── send_questions.py
+│	│	│       ├── serialization.py
+│	│	│       ├── session_helpers.py
+│	│	│       ├── timer_session.py
+│	│	│       ├── validation.py
+│	│	│       ├── validator.py
+│	│	│
+│	│	├── __init__.py
+│	│	├── session.py
+│	│
+│	├──	__init__.py
+│	├──	bot_initializer.py
+│	├── bot_manager.py
+│	├──	bot_startup_sequence.py
+│	├──	bots_utils.py
+│	├── bots_config.py
+│	├── bots_registry.py
+│	├── channel_validator.py
+│	├──	task_monitor.py
+│	├──	utbk_timer_client.py
+│	│
+├──common
+│	├──messaging/
+│	│	├── email_responder.py
+│	│	├── log_proces.py
+│	│	├── notification_poller.py
+│	│	├── succes_message.py
+│	│	├── vip_message_builder.py
+│	│
+│	├──templates/
+│	│	├── donasi_pesan.py
+│	│	├── markup_statistik.py
+│	│
+│	├──utils/
+│		├── __init__.py
+│		├── admin_cache.py
+│		├── admin_notifier.py
+│		├── admin_state_manager.py
+│		├── callback_helpers.py
+│		├── chart_donations.py
+│		├── combine_admin_ids.py
+│		├── escape_markdown.py
+│		├── fsm_helpers.py
+│		├── get_user.py
+│		├── memory_monitor.py
+│		├── notify_admin.py
+│		├── state_helper.py
+│		├── state_manager.py
+│		├── table_utils.py
+│		├── vip_state_manager.py
+│		├── vip_state_transfer.py
+│
+├──webhook/
+│	├── bot/
+│	│	├── __init__.py
+│	│	├── notifier.py
+│	│
+│	├── core/
+│	│   ├── __init__.py
+│	│   ├── config.py
+│	│   ├── decorators.py
+│	│
+│	├── reminder/
+│	│	├── __init__.py
+│	│	├── reminder_loop.py
+│	│
+│	├── utils/
+│	│	├── __init__.py
+│	│	├── parsing.py
+│	│	├── pendukung.py
+│	│	├── validasi.py
+│	│
+│	├── webhook/
+│	│	├── __init__.py
+│	│	├── regular_handler.py
+│	│	├── vip_handler.py
+│	│
+│	├── trakteer_listener.py
+│
+├── configs/
+│	├──	bots_utils.py
+│	├── logging_setup.py
+│
+├── db/
+│	├── admin/
+│	│	├── __init__.py
+│	│	├── admin_manage.py
+│	│	├── admin_query.py
+│	│	├── admin_state.py
+│	│	├── admin_utils.py
+│	│	├── dashoard_stats.py
+│	│	├── video_tracking.py
+│	│
+│	├── model/
+│	│	├── __init__.py
+│	│	├── utbk_model.py
+│	│
+│	├── stats/
+│	│	├── __init__.py
+│	│	├── donation_aggregates.py
+│	│
+│	├── vip_users/
+│	│	├── __init__.py
+│	│	├── status_legacy.py
+│	│	├── vip_activation.py
+│	│	├── vip_constants.py
+│	│	├── vip_deactivate.py
+│	│	├── vip_extend.py
+│	│	├── vip_logs_donations.py
+│	│	├── vip_logs.py
+│	│	├── vip_process_donations.py
+│	│	├── vip_reset.py
+│	│	├── vip_status.py
+│	│	├── vip_utils.py
+│	│
+│	├──	__init__.py
+│	├── chanel_management.py
+│	├── connect.py
+│	├──	donasi_management.py
+│	├── file_management.py
+│	├── forward_message.py
+│	├──	models.py
+│	├── user_management.py
+│
+├──logs/
+│
+├──scripts/
+│	├──backup.py
+│	├──import_csv.py
+│	├──import_soal.py
+│	├──insert_question_from_data.py
+│	├──notif.py
+│	├──setup_db.py
+│	├──setup_utbk.py
+│
+├──.env
+├──.gitignore
+├──client_secrets.json
+├──config.py
+├──credentials.json
+├──main.py
+├──Procfile
+├──pyproject.toml
+├──README.md
+├──required_channels.json
+├──requirements.txt
+├──service_account.json
+
