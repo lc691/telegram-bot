@@ -4,8 +4,8 @@ from typing import Tuple, Optional
 from shared.utils.parse_date import ensure_aware
 from configs.logging_setup import log
 from config import DAILY_FREE_LIMIT, UNLIMITED
-from .repository import (
-    get_user,
+from database.user.user_repository import (
+    get_user_by_id,
     insert_default_user,
     reset_vip_status,
     update_quota,
@@ -53,7 +53,7 @@ class UserAccessService:
         # --------------------------------------------------
         # 2️⃣ LOAD USER
         # --------------------------------------------------
-        user = get_user(user_id)
+        user = get_user_by_id(user_id)
 
         # --------------------------------------------------
         # 3️⃣ INIT USER

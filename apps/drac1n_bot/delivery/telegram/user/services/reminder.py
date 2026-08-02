@@ -5,8 +5,11 @@ from pyrogram.types import Message
 from shared.utils.parse_date import ensure_aware
 from configs.logging_setup import log
 
+from database.user.user_repository import (
+    get_user_by_id,
+    update_vip_reminder,
+)
 
-from .repository import get_user, update_vip_reminder
 
 VIP_WARNING_THRESHOLD = timedelta(days=1)
 
@@ -18,7 +21,7 @@ async def remind_vip_if_needed(user_id: int, now: datetime, message: Message):
     - now: datetime aware
     - message: pyrogram Message object untuk reply
     """
-    user = get_user(user_id)
+    user = get_user_by_id(user_id)
     if not user:
         # log.info(f"[Reminder] User {user_id} belum ada → skip reminder")
         return

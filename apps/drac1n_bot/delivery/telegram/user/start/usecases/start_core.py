@@ -6,16 +6,15 @@ from pyrogram.enums import ParseMode
 from configs.logging_setup import log
 from configs.trace import set_trace_id, reset_trace_id
 from database.affiliate_db import ensure_user_has_affiliate_code
+from apps.drac1n_bot.services.referral.referral_handler import handle_referral_assignment
 
-from ...refferral.handlers.register import referral_menu_entrypoint
-from ..check_join.channel_verification import check_channel_join
-from ......services.referral.referral_handler import handle_referral_assignment
-from ...services.reminder import remind_vip_if_needed
-from ...services.repository import add_user_if_not_exists
-
-from ...file.usecases.access_file_flow import access_file_flow
-from ...vip.usecases.show_entry import show_vip_entry
-from ...status.handlers.status_entry_handler import handle_status_entry
+from apps.drac1n_bot.delivery.telegram.user.refferral.handlers.register import referral_menu_entrypoint
+from apps.drac1n_bot.delivery.telegram.user.start.check_join.channel_verification import check_channel_join
+from apps.drac1n_bot.delivery.telegram.user.services.reminder import remind_vip_if_needed
+from database.user.user_repository import add_user_if_not_exists
+from apps.drac1n_bot.delivery.telegram.user.file.usecases.access_file_flow import access_file_flow
+from apps.drac1n_bot.delivery.telegram.user.vip.usecases.show_entry import show_vip_entry
+from apps.drac1n_bot.delivery.telegram.user.status.handlers.status_entry_handler import handle_status_entry
 
 from .start_ui import show_main_menu
 

@@ -1,7 +1,8 @@
 from pyrogram import Client, filters
 from pyrogram.types import Message
 
-from ..usecases.start_core import handle_start_command
+
+from apps.drac1n_bot.delivery.telegram.user.start.usecases.start_core import handle_start_command
 
 DEFAULT_USER_GROUP = 1
 

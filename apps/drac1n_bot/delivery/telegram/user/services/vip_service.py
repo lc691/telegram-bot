@@ -3,7 +3,7 @@ from datetime import datetime, timezone
 
 from shared.utils.parse_date import ensure_aware
 
-from .repository import (
+from database.user.user_repository import (
     get_user,
     insert_default_user,
     update_quota,
