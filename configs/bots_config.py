@@ -1,12 +1,12 @@
 from typing import Any, Callable, Dict, TypedDict
 
-from bots.caridrama_bot.register.register_cari import (
+from apps.caridrama_bot.register.register_cari import (
     register_cari_drama_handlers,
 )
-from bots.dcst_mbot.register.register_dcst import register_dcst_handlers
-from bots.drac1n_bot.register.register_drac1n import register_drac1n_handlers
-from bots.dramaglow_bot.register.register_glow import register_glow_handlers
-from bots.initializer.bots.factory import (
+from apps.dcst_mbot.register.register_dcst import register_dcst_handlers
+from apps.drac1n_bot.register.register_drac1n import register_drac1n_handlers
+from apps.dramaglow_bot.register.register_glow import register_glow_handlers
+from infrastructure.bootstrap.bots.factory import (
     create_app,
     create_app_glow,
     create_caridrama_app,

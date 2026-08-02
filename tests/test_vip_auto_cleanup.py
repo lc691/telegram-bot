@@ -2,7 +2,7 @@ from unittest.mock import AsyncMock, MagicMock, patch
 
 import pytest
 
-import common.task.vip_auto_cleanup as mod
+import scheduler.jobs.vip_auto_cleanup as mod
 
 
 class FakeClient:

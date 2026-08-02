@@ -79,7 +79,7 @@ def fake_db(monkeypatch):
         def __exit__(self, exc_type, exc, tb):
             pass
 
-    from db.vip_users import vip_activation
+    from database.vip_users import vip_activation
     monkeypatch.setattr(vip_activation, "get_dict_cursor", lambda: Ctx())
 
     return cur

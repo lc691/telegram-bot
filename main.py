@@ -6,33 +6,33 @@ import threading
 import asyncpg
 import uvicorn
 
-from bots.bot_manager import BotManager
-from bots.bot_shutdown_sequence import shutdown_sequence
-from bots.bots_registry import register_bot
+from infrastructure.telegram.bot_manager import BotManager
+from infrastructure.telegram.bot_shutdown_sequence import shutdown_sequence
+from infrastructure.telegram.bots_registry import register_bot
 
 from configs.bots_config import BOT_CONFIG
 from configs.logging_setup import setup_logger, log
 
 from channel_validator import validate_required_channels
-from common.task_monitor import TaskMonitor
-from common.task.vip_auto_cleanup import start_vip_auto_cleanup
-from common.utils.admin_cache import admin_cache
-from common.utils.memory_monitor import monitor_memory
-from common.utils.ui_session import start_ui_cleanup_loop
-from bots.bot_startup_sequence import start_global_tasks_once
-from common.task.heavy_retention import heavy_retention_loop
-from common.task.trending_auto_refresh import (
+from shared.task_monitor import TaskMonitor
+from scheduler.jobs.vip_auto_cleanup import start_vip_auto_cleanup
+from shared.utils.admin_cache import admin_cache
+from shared.utils.memory_monitor import monitor_memory
+from shared.utils.ui_session import start_ui_cleanup_loop
+from infrastructure.telegram.bot_startup_sequence import start_global_tasks_once
+from scheduler.jobs.heavy_retention import heavy_retention_loop
+from scheduler.jobs.trending_auto_refresh import (
     start_trending_auto_refresh,
 )
 
 # 🔥 WEBHOOK KHUSUS PAYMENT / TRAKTEER
-from common.webhook.trakteer_listener import app as webhook_app
+from infrastructure.webhook.trakteer_listener import app as webhook_app
 
-from bots.caridrama_bot.infrastructure.memory.memory_metrics import (
+from apps.caridrama_bot.infrastructure.memory.memory_metrics import (
     memory_metrics_logger,
 )
 
-from db.models import ensure_admins_table
+from database.models import ensure_admins_table
 from config import PGDATABASE, PGHOST, PGPASSWORD, PGPORT, PGUSER
 
 

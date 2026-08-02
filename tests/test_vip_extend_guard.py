@@ -1,7 +1,7 @@
 from datetime import datetime, timedelta
 
 from configs.timezone import JAKARTA_TZ
-from db.vip_users.vip_service import safe_insert_vip_user
+from database.vip_users.vip_service import safe_insert_vip_user
 
 
 def test_new_vip(fake_db):
