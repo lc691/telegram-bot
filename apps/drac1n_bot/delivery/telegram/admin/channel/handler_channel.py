@@ -2,9 +2,12 @@ from pyrogram import Client, filters
 from pyrogram.enums import ParseMode
 from pyrogram.types import CallbackQuery, InlineKeyboardButton, InlineKeyboardMarkup
 
-from apps.drac1n_bot.delivery.telegram.user.services.channel_repository import (
+from database.required_channel_repository import (
     delete_required_channel,
     load_required_channels,
+)
+
+from apps.drac1n_bot.delivery.telegram.user.channel.validator import (
     validate_required_channels,
 )
 from apps.drac1n_bot.utils.channel_markup_factory import (

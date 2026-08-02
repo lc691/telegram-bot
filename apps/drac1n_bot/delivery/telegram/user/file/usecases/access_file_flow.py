@@ -1,11 +1,12 @@
 from configs.logging_setup import log
-from ...vip.helpers.helper import (
+from apps.drac1n_bot.delivery.telegram.user.vip.helpers.helper import (
     _reply_upgrade_free,
     _reply_upgrade_paid,
 )
-from ..services.file_service import increment_view_count
-from ..services.sender import send_with_navigation
-from ...services.user_service import UserAccessService
+
+from apps.drac1n_bot.delivery.telegram.user.file.services.file_service import increment_view_count
+from apps.drac1n_bot.delivery.telegram.user.file.services.sender import send_with_navigation
+from apps.drac1n_bot.delivery.telegram.user.services.access_service import UserAccessService
 from database.connection import get_dict_cursor
 
 
@@ -106,7 +107,7 @@ async def access_file_flow(
     before_quota = free_remaining
 
     if not is_paid_file and not is_vip and not is_admin:
-        remaining = await UserAccessService.consume_free_quota_atomic(user_id)
+        remaining = await UserAccessService.consume_free_quota(user_id)
         if remaining is None:
             return await _reply_upgrade_free(message)
         free_remaining = remaining

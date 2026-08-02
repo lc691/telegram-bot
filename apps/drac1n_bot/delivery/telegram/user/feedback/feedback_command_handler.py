@@ -1,10 +1,9 @@
 from pyrogram import Client
 from pyrogram.enums import ParseMode
-from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup, Message
 from pyrogram.types import Message
 
-from .menu_config import build_feedback_keyboard
-from .text_template import FEEDBACK_TEXT
+from apps.drac1n_bot.delivery.telegram.user.feedback.menu_config import build_feedback_keyboard
+from apps.drac1n_bot.delivery.telegram.user.feedback.text_template import FEEDBACK_TEXT
 
 
 async def feedback_command_handler(
@@ -17,5 +16,3 @@ async def feedback_command_handler(
         reply_markup=build_feedback_keyboard(),
         disable_web_page_preview=True,
     )
-
-

@@ -1,8 +1,9 @@
 from configs.logging_setup import log
 
-from ...services.channel_repository import load_required_channels
-from .checks import check_required_channels
-from .messages import send_join_instructions
+from database.required_channel_repository import load_required_channels
+
+from apps.drac1n_bot.delivery.telegram.user.start.check_join.checks import check_required_channels
+from apps.drac1n_bot.delivery.telegram.user.start.check_join.messages import send_join_instructions
 
 
 async def check_channel_join(

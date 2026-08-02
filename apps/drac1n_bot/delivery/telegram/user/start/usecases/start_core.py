@@ -10,7 +10,7 @@ from apps.drac1n_bot.services.referral.referral_handler import handle_referral_a
 
 from apps.drac1n_bot.delivery.telegram.user.refferral.handlers.register import referral_menu_entrypoint
 from apps.drac1n_bot.delivery.telegram.user.start.check_join.channel_verification import check_channel_join
-from apps.drac1n_bot.delivery.telegram.user.services.reminder import remind_vip_if_needed
+from apps.drac1n_bot.delivery.telegram.user.vip.reminder import remind_vip_if_needed
 from database.user.user_repository import add_user_if_not_exists
 from apps.drac1n_bot.delivery.telegram.user.file.usecases.access_file_flow import access_file_flow
 from apps.drac1n_bot.delivery.telegram.user.vip.usecases.show_entry import show_vip_entry

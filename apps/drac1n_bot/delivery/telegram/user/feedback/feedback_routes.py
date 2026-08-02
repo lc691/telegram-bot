@@ -4,7 +4,7 @@ from pyrogram.enums import ParseMode
 from pyrogram.types import CallbackQuery
 
 from shared.utils.admin_state_manager import AdminStateManager
-from .....repository.feedback_repository import feedback_repository
+from apps.drac1n_bot.repository.feedback_repository import feedback_repository
 
 
 # =====================================================

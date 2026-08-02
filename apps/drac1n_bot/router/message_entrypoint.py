@@ -7,7 +7,7 @@ from shared.utils.state_helper import cancel_all_states, should_cancel_state_on_
 from shared.utils.event_tracer import EventTracer
 
 from database.chanel_management import discard_user, is_user_adding
-from apps.drac1n_bot.delivery.telegram.user.services.channel_repository import save_required_channel
+from database.required_channel_repository import save_required_channel
 from apps.drac1n_bot.ui.dashboard import send_dashboard
 
 from .admin_text_router import handle_admin_text

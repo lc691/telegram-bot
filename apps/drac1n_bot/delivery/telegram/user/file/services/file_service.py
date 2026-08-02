@@ -3,7 +3,7 @@ from pyrogram.enums import ParseMode
 from configs.logging_setup import log
 from database.connection import get_db_cursor, get_dict_cursor
 
-from .normalize_main_title import normalize_for_match
+from apps.drac1n_bot.delivery.telegram.user.file.services.normalize_main_title import normalize_for_match
 
 
 def get_files_from_db():
@@ -158,7 +158,7 @@ def bulk_insert_initial_views(view_data: dict[str, int]):
                 video_stats_tuples,
             )
 
-            # 3️⃣ Insert/update ke file_views
+            # 3️⃣ Insert.update ke file_views
             view_tuples = [(h, v) for h, v in view_data.items()]
             cursor.executemany(
                 """

@@ -6,7 +6,7 @@ from configs.logging_setup import log
 from shared.utils.admin_cache import admin_cache
 
 from database.connection import get_dict_cursor
-from apps.drac1n_bot.delivery.telegram.user.services.user_service import UserAccessService
+from apps.drac1n_bot.delivery.telegram.user.services.access_service import UserAccessService
 from apps.drac1n_bot.delivery.telegram.user.file.services.cache import get_navigation_info_cached
 from apps.drac1n_bot.delivery.telegram.user.file.usecases.access_file_flow import access_file_flow
 

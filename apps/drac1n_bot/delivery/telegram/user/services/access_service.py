@@ -1,3 +1,20 @@
+"""
+User Access Service
+
+Mengelola hak akses user terhadap fitur yang
+dibatasi kuota maupun VIP.
+
+Tanggung jawab:
+- Inisialisasi user baru.
+- Validasi status VIP.
+- Reset kuota harian.
+- Mengurangi kuota secara atomic.
+
+Catatan:
+- Tidak berinteraksi dengan Telegram.
+- Seluruh operasi database dilakukan melalui repository.
+"""
+
 from datetime import datetime, timezone
 from typing import Tuple, Optional
 
@@ -121,7 +138,7 @@ class UserAccessService:
     # ATOMIC CONSUME (THE ONLY PLACE THAT MUTATES QUOTA)
     # ==================================================
     @staticmethod
-    async def consume_free_quota_atomic(user_id: int) -> Optional[int]:
+    async def consume_free_quota(user_id: int) -> Optional[int]:
         """
         Atomic consume (single source of mutation):
         - quota > 0  → decrement & return remaining

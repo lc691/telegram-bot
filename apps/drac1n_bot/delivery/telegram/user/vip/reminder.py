@@ -1,3 +1,17 @@
+
+"""
+VIP Reminder
+
+Mengirim reminder kepada user apabila masa aktif VIP
+akan segera berakhir.
+
+Rules:
+- Hanya untuk VIP aktif.
+- Reminder dikirim satu kali.
+- Setelah berhasil dikirim akan mengubah
+  flag vip_reminded menjadi True.
+"""
+
 from datetime import datetime, timedelta, timezone
 
 from pyrogram.types import Message

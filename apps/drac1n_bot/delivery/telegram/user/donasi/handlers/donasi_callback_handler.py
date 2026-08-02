@@ -2,7 +2,8 @@ from pyrogram import Client
 from pyrogram.types import CallbackQuery
 
 from configs.logging_setup import log
-from ..services.service_donasi import handle_donasi_metode
+
+from apps.drac1n_bot.delivery.telegram.user.donasi.services.service_donasi import handle_donasi_metode
 
 
 async def process_donasi_callback(client: Client, callback: CallbackQuery):

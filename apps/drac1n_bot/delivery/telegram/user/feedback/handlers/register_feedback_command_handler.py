@@ -1,6 +1,7 @@
 from pyrogram import Client, filters
 
-from ..feedback_command_handler import feedback_command_handler
+
+from apps.drac1n_bot.delivery.telegram.user.feedback.feedback_command_handler import feedback_command_handler
 
 FEEDBACK_GROUP = 13
 

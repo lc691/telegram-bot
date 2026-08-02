@@ -6,7 +6,8 @@ from pyrogram.enums import ParseMode
 from pyrogram.types import Message
 
 from configs.logging_setup import log
-from .....usecases.admin.thumbnile.update_thumbnail_flow import (
+
+from apps.drac1n_bot.usecases.admin.thumbnile.update_thumbnail_flow import (
     update_thumbnail_flow,
 )
 

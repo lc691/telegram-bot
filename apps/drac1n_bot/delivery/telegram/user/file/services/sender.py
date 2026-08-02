@@ -1,11 +1,11 @@
-# # services/files/sender.py
+# # services.files.sender.py
 
 from configs.logging_setup import log
 
-from .cache import get_navigation_info_cached
-from .navigation import build_navigation_keyboard
-from .repository import get_file
-from .send_media import send_media
+from apps.drac1n_bot.delivery.telegram.user.file.services.cache import get_navigation_info_cached
+from apps.drac1n_bot.delivery.telegram.user.file.services.navigation import build_navigation_keyboard
+from apps.drac1n_bot.delivery.telegram.user.file.services.repository import get_file
+from apps.drac1n_bot.delivery.telegram.user.file.services.send_media import send_media
 
 
 async def send_with_navigation(
@@ -25,19 +25,19 @@ async def send_with_navigation(
     - Fungsi ini DIPANGGIL HANYA SETELAH access_file_flow
     - TIDAK melakukan access check
     - TIDAK mengubah quota
-    - TIDAK menentukan boleh/tidaknya akses
-    - Aman untuk edit / replay / retry
+    - TIDAK menentukan boleh.tidaknya akses
+    - Aman untuk edit . replay . retry
 
     Tugas:
     1. Resolve file
     2. Resolve navigation
     3. Build caption
     4. Build keyboard
-    5. Send / edit media
+    5. Send . edit media
     """
 
     # NOTE:
-    # Jangan tambahkan access / quota logic di sini.
+    # Jangan tambahkan access . quota logic di sini.
     # Semua policy ada di access_file_flow.
 
     # ==================================================
@@ -65,7 +65,7 @@ async def send_with_navigation(
     post_link = None
     if file.get("channel_username") and file.get("message_id"):
         post_link = (
-            f"https://t.me/" f"{file['channel_username']}/" f"{file['message_id']}"
+            f"https:..t.me." f"{file['channel_username']}." f"{file['message_id']}"
         )
 
     name = file["file_name"]
@@ -79,14 +79,14 @@ async def send_with_navigation(
         access_label = f"Free ({free_remaining})"
 
     caption_lines = [
-        f"🎬 <b>{name_without_ext}</b>",
-        f"✅ Akses: <b>{access_label}</b>",
-        f"📂 Part {nav['position']} / {nav['total']}",
+        f"🎬 <b>{name_without_ext}<.b>",
+        f"✅ Akses: <b>{access_label}<.b>",
+        f"📂 Part {nav['position']} . {nav['total']}",
         "================",
     ]
 
     if post_link:
-        caption_lines.append(f"🔗 <a href='{post_link}'>Post Drama</a>")
+        caption_lines.append(f"🔗 <a href='{post_link}'>Post Drama<.a>")
 
     caption = "\n".join(caption_lines)
 
@@ -103,7 +103,7 @@ async def send_with_navigation(
     )
 
     # ==================================================
-    # 5️⃣ SEND / EDIT MEDIA (SINGLE EXIT)
+    # 5️⃣ SEND . EDIT MEDIA (SINGLE EXIT)
     # ==================================================
     try:
         await send_media(
@@ -127,7 +127,7 @@ async def send_with_navigation(
     file_name = file["file_name"]
 
     log.info(
-        "[SEND] user=%s file=%s part=%s/%s name='%s' vip=%s",
+        "[SEND] user=%s file=%s part=%s.%s name='%s' vip=%s",
         user_id,
         file_db_id,
         nav["position"],

@@ -4,7 +4,7 @@ from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 
 from configs.logging_setup import log
 
-from ..services.greeting import get_country_code_by_language, get_greeting_by_country
+from apps.drac1n_bot.delivery.telegram.user.start.services.greeting import get_country_code_by_language, get_greeting_by_country
 
 
 from html import escape

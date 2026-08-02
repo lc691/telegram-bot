@@ -3,8 +3,8 @@ from pyrogram.types import CallbackQuery
 from pyrogram.enums import ParseMode
 
 from shared.utils.admin_state_manager import AdminStateManager
-from .....repository.feedback_repository import feedback_repository
-from .feedback_routes import ROUTES
+
+from apps.drac1n_bot.delivery.telegram.user.feedback.feedback_routes import ROUTES
 
 
 STATUS_LABELS = {

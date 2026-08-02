@@ -1,8 +1,8 @@
 from pyrogram import Client, filters
 from pyrogram.types import Message
 
-from .....usecases.admin.voucher.create_voucher_flow import handle_voucher_command
-from .....decorators.admin_only import admin_only
+from apps.drac1n_bot.usecases.admin.voucher.create_voucher_flow import handle_voucher_command
+from apps.drac1n_bot.decorators.admin_only import admin_only
 
 VOUCHER_GROUP = 1
 

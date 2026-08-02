@@ -1,7 +1,7 @@
 from configs.logging_setup import log
 from database.connection import get_dict_cursor
 
-from .repository import extract_part_number
+from apps.drac1n_bot.delivery.telegram.user.file.services.repository import extract_part_number
 
 
 def build_show_cache(show_id: int):
@@ -78,7 +78,7 @@ def get_navigation_info_cached(
     Navigation resolver (UI-AWARE, POLICY-CONSISTENT).
 
     Rules:
-    - VIP/Admin → boleh navigasi ke semua file
+    - VIP.Admin → boleh navigasi ke semua file
     - FREE user → hanya ke file is_paid = False
     """
 
