@@ -7,6 +7,14 @@ from configs.logging_setup import log
 def register_admin_handlers(app: Client) -> None:
     registry = BaseHandlerRegistry("drac1n_bot")
 
+    from ..handlers.admin.system.restart_service_handler import (
+        register_restart_service_handler,
+    )
+
+    from ..handlers.admin.system.register_logs_handler import (
+        register_logs_handler,
+    )
+
     from ..handlers.admin.broadcast.admin_broadcast import (
         register_broadcast_message_handlers,
     )
@@ -34,6 +42,8 @@ def register_admin_handlers(app: Client) -> None:
         register_leaderboard,
     )
 
+    registry.add("restart", register_restart_service_handler)
+    registry.add("logs", register_logs_handler)
     registry.add("broadcast", register_broadcast_message_handlers)
     registry.add("list_user", register_list_user_handlers)
     registry.add("channel", register_channel_handlers)
@@ -44,4 +54,4 @@ def register_admin_handlers(app: Client) -> None:
     registry.add("voucher", register_voucher_command_handler)
     registry.add("leaderboard", register_leaderboard)
     registry.register_all(app)
-    log.info("🎉 Admin handlers drac1n_bot didaftarkan.")
+    # log.info("🎉 Admin handlers drac1n_bot didaftarkan.")

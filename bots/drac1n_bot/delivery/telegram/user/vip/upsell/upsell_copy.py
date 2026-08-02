@@ -3,46 +3,51 @@ from typing import Final
 UpsellKey = tuple[str, str]
 
 UPSELL_COPY: Final[dict[UpsellKey, str]] = {
-    # 1H → 3H (soft)
+    # 1H → 3H
     ("1hari", "3hari"): (
-        "💡 Tanggung kalau cuma 1 hari\n\n"
-        "💎 <b>VIP 3 Hari lebih praktis</b>\n"
+        "💡 Biar tidak cepat habis\n\n"
+        "💎 <b>VIP 3 Hari lebih nyaman</b>\n"
         "📉 Lebih hemat per hari\n"
-        "🧠 Tidak perlu beli ulang besok"
+        "⚡ Tidak perlu beli lagi besok"
     ),
-    # 1H → 7H (main upsell)
+
+    # 1H → 7H
     ("1hari", "7hari"): (
-        "💡 Sedikit lagi jauh lebih untung\n\n"
-        "💎 <b>VIP 7 Hari pilihan aman</b>\n"
-        "📉 Harga per hari jauh lebih murah\n"
-        "🧠 Lebih tenang, tidak buru-buru"
+        "🔥 Pilihan paling banyak diambil\n\n"
+        "💎 <b>VIP 7 Hari lebih worth it</b>\n"
+        "📉 Jauh lebih hemat per hari\n"
+        "🚀 Nonton lebih puas tanpa khawatir habis"
     ),
+
     # 3H → 7H
     ("3hari", "7hari"): (
-        "💡 Tinggal naik sedikit\n\n"
-        "💎 <b>VIP 7 Hari cocok untuk lanjut nonton</b>\n"
-        "📉 Lebih hemat per hari\n"
-        "🧠 Tidak repot beli ulang"
+        "💡 Sekalian yang lebih hemat\n\n"
+        "💎 <b>VIP 7 Hari lebih untung</b>\n"
+        "📉 Harga per hari lebih murah\n"
+        "⚡ Tidak repot perpanjang cepat"
     ),
-    # 7H → 10H (JEMBATAN)
+
+    # 7H → 10H
     ("7hari", "10hari"): (
-        "💡 Banyak yang naik ke sini\n\n"
+        "🔥 Upgrade favorit pengguna\n\n"
         "💎 <b>VIP 10 Hari lebih lega</b>\n"
-        "📉 Selisih kecil, durasi lebih panjang\n"
-        "🧠 Cocok kalau 7 hari terasa kurang"
+        "📉 Tambah sedikit, durasi lebih panjang\n"
+        "🚀 Lebih nyaman untuk lanjut marathon"
     ),
+
     # 10H → 15H
     ("10hari", "15hari"): (
-        "💡 Sedikit lagi lebih hemat\n\n"
-        "💎 <b>VIP 15 Hari lebih seimbang</b>\n"
-        "📉 Harga per hari lebih murah\n"
-        "🧠 Aman untuk 2 minggu"
+        "💡 Selisih sedikit lebih untung\n\n"
+        "💎 <b>VIP 15 Hari lebih hemat</b>\n"
+        "📉 Harga per hari makin murah\n"
+        "⚡ Lebih nyaman tanpa sering top up"
     ),
-    # 15H → 30H (BEST VALUE)
+
+    # 15H → 30H
     ("15hari", "30hari"): (
-        "🔥 Rekomendasi Terbaik\n\n"
-        "👑 <b>VIP 30 Hari = Best Value</b>\n"
+        "👑 <b>VIP 30 Hari Best Value</b>\n\n"
         "📉 Harga per hari paling murah\n"
-        "🚀 Sekali bayar, aman sebulan"
+        "🚀 Sekali aktif aman sebulan penuh\n"
+        "🔥 Paket paling favorit pengguna VIP"
     ),
 }

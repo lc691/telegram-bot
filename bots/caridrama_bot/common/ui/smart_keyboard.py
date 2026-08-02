@@ -94,7 +94,7 @@ def build_keyboard(
             smart_request_button(
                 show_id=show_id,
                 user_id=user_id,
-                source="main",  # 🔥 kontrak dipertahankan
+                source="main",
             )
         )
 

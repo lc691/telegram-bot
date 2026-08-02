@@ -37,6 +37,9 @@ def register_user_cmd_handlers(app: Client, admin_cache: AdminCache) -> None:
     from ..delivery.telegram.user.status.handlers.status_command_handler import (
         register_status_cmd_handler,
     )
+    from ..delivery.telegram.user.feedback.handlers.register_feedback_command_handler import (
+        register_feedback_cmd_handler
+    )
 
     # ==================================================
     # REGISTER HANDLERS (USER FLOW ORDER)
@@ -50,9 +53,10 @@ def register_user_cmd_handlers(app: Client, admin_cache: AdminCache) -> None:
 
     registry.add("redeem_voucher", register_redeem_command_handler)
     registry.add("referral_menu", register_referral)
+    registry.add("feedback", register_feedback_cmd_handler)
 
     # ==================================================
     # APPLY TO APP
     # ==================================================
     registry.register_all(app)
-    log.info("🎉 Semua handler user drac1n_bot berhasil didaftarkan.")
+    # log.info("🎉 Semua handler user drac1n_bot berhasil didaftarkan.")

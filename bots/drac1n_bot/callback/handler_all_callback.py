@@ -7,6 +7,7 @@ from .callback_handler_common import register_common_callbacks
 from .callback_handler_stats import register_stats_callback
 from .callback_handler_vip import register_vip_callback
 from .callback_nav_video import register_nav_video_callback
+from .callback_feedback_handler import register_feedback_callback
 
 
 # file: register_all_callbacks.py
@@ -18,3 +19,4 @@ def register_all_callbacks(app: Client):
     register_nav_video_callback(app)
     register_broadcast_callback(app)
     register_common_callbacks(app)
+    register_feedback_callback(app)

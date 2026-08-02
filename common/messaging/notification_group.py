@@ -12,7 +12,7 @@ from common.messaging.notif.vip_utils import calculate_new_vip_end, get_basic_da
 from configs.logging_setup import log
 
 # 🕒 Durasi hapus otomatis = 10 jam (36000 detik)
-AUTO_DELETE_SECONDS = 600
+AUTO_DELETE_SECONDS = 36000
 
 # 🕑 Timezone utama = Asia/Jakarta
 TZ_JAKARTA = ZoneInfo("Asia/Jakarta")
@@ -31,6 +31,7 @@ async def send_vip_group_announcement(
     mode: str | None = None,
     expired_at: datetime | None = None,
     old_vip_end: datetime | None = None,
+    purchases: int = 1,
 ) -> dict | None:
     try:
         # ======================================================
@@ -104,6 +105,7 @@ async def send_vip_group_announcement(
             bonus_days=bonus_days,
             old_vip_end=old_vip_end,
             new_vip_end=new_vip_end,
+            purchases=purchases,
         )
 
         # ======================================================

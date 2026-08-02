@@ -71,7 +71,7 @@ def register_cari_drama_handlers(app: Client, admin_cache) -> None:
     # --------------------------------------------------
     registry.register_all(app)
 
-    log.info(
-        "[%s] Semua handler berhasil didaftarkan",
-        HANDLER_NAMESPACE,
-    )
+    # log.info(
+    #     "[%s] Semua handler berhasil didaftarkan",
+    #     HANDLER_NAMESPACE,
+    # )

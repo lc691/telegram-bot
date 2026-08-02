@@ -4,11 +4,14 @@ from .inline_result_builder import (
     build_inline_results,
 )
 
+from configs.logging_setup import log
+
 
 class InlineSearchPresenter:
 
     @staticmethod
     def build(result, query: str, offset: int) -> dict:
+
         offset = max(int(offset or 0), 0)
 
         # ==================================================
@@ -20,22 +23,44 @@ class InlineSearchPresenter:
             offset=offset,
         )
 
-        rows = result.rows or []
-        row_count = len(rows)
+        log.info(
+            "[INLINE_PRESENT] built_results=%s",
+            len(results),
+        )
 
         # ==================================================
-        # 2️⃣ SAFER PAGINATION
+        # 2️⃣ PAGINATION
         # ==================================================
-        has_more = row_count >= INLINE_LIMIT
+        has_more = bool(getattr(result, "has_more", False))
 
-        next_offset = str(offset + INLINE_LIMIT) if has_more else ""
+        next_offset = (
+            str(offset + INLINE_LIMIT)
+            if has_more
+            else ""
+        )
+
+        log.info(
+            "[INLINE_PRESENT] has_more=%s next_offset=%r",
+            has_more,
+            next_offset,
+        )
 
         # ==================================================
         # 3️⃣ FINAL PAYLOAD
         # ==================================================
-        return {
+        payload = {
             "results": results,
+
+            # disable aggressive cache while debugging
+            "cache_time": 0,
+
             "is_personal": True,
-            "cache_time": _inline_cache_time(result.kind),
             "next_offset": next_offset,
         }
+
+        log.info(
+            "[INLINE_PRESENT] payload_ready results=%s",
+            len(results),
+        )
+
+        return payload

@@ -54,11 +54,14 @@ async def send_vip_menu(
             return
 
         text = (
-            "💎 <b>Pilih Paket VIP</b>\n\n"
-            "⚡ Aktif otomatis 10–60 detik\n"
-            "📖 Baca <a href='https://t.me/tutorialvip1/22'>Panduan Aktivasi Otomatis</a>\n"
-            "🎬 Akses penuh semua episode\n\n"
-            "👇 Pilih paket terbaik untuk kamu"
+            "💎 <b>Pilih Paket VIP</b>\n"
+            "═══════✦✧✦═══════\n\n"
+            "⚡ Aktif otomatis dalam 10–60 detik\n"
+            "🎬 Semua episode langsung terbuka\n"
+            "🚀 Tanpa iklan & tanpa delay\n\n"
+            "📖 <a href='https://t.me/tutorialvip1/22'>Cara aktivasi otomatis</a>\n"
+            "═══════✦✧✦═══════\n\n"
+            "👇 <b>Pilihan paket untuk kamu</b>"
         )
 
         markup = build_vip_buttons(

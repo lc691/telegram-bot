@@ -13,7 +13,7 @@ from .trace import get_trace_id
 colorama_init(autoreset=True)
 
 JAKARTA_TZ = timezone("Asia/Jakarta")
-
+LOGGER_NAME = "drac1n"
 
 # ======================================================
 # Filters
@@ -99,7 +99,7 @@ def setup_logger(log_dir: str = "logs", level: int = logging.INFO) -> logging.Lo
     os.makedirs(log_dir, exist_ok=True)
     log_file = os.path.join(log_dir, "bot.log")
 
-    logger = logging.getLogger("glow")
+    logger = logging.getLogger(LOGGER_NAME)
     logger.setLevel(level)
     logger.propagate = False
 
@@ -141,9 +141,12 @@ def setup_logger(log_dir: str = "logs", level: int = logging.INFO) -> logging.Lo
     console_handler = logging.StreamHandler(sys.stdout)
     console_handler.setFormatter(
         ColoredFormatter(
-            "[%(asctime)s] [%(levelname)s] [%(trace_id)s] %(message)s",
-            datefmt="%H:%M:%S",
+            "[%(levelname)s] [%(trace_id)s] %(message)s",
         )
+        # ColoredFormatter(
+        #     "[%(asctime)s] [%(levelname)s] [%(trace_id)s] %(message)s",
+        #     datefmt="%H:%M:%S",
+        # )
     )
 
     console_handler.addFilter(trace_filter)
@@ -171,4 +174,5 @@ def setup_logger(log_dir: str = "logs", level: int = logging.INFO) -> logging.Lo
 # Public logger reference
 # ======================================================
 
-log = logging.getLogger("glow")
+log = logging.getLogger(LOGGER_NAME)
+

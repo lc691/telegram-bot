@@ -4,35 +4,54 @@ from .info_helpers import format_wib, sisa_waktu
 def format_info_text(
     *,
     user_id: int,
-    username: str,
+    username: str | None,
+    first_name: str | None,
     is_vip: bool,
     vip_start,
     vip_expired,
     is_private: bool,
 ) -> str:
-    status_icon = "👑" if is_vip else "💤"
-    status_text = "✅ <b>Aktif</b>" if is_vip else "❌ Tidak aktif"
 
-    text = (
-        f"<b>👤 {'Info Pengguna' if is_private else 'Info Member'}</b>\n"
-        f"━━━━━━━━━━━━━━━\n"
-        f"🆔 <b>ID:</b> <code>{user_id}</code>\n"
-        f"📛 <b>Username:</b> {username}\n"
-        f"━━━━━━━━━━━━━━━\n"
-        f"{status_icon} <b>Status VIP</b>\n"
-        f"• Status: {status_text}\n"
+    title = (
+        "👤 Info Pengguna"
+        if is_private
+        else "👥 Info Member"
     )
+
+    display_name = (
+        username
+        or first_name
+        or "Pengguna Telegram"
+    )
+
+    status_icon = "👑" if is_vip else "💤"
+
+    status_text = (
+        "✅ <b>VIP Aktif</b>"
+        if is_vip
+        else "❌ <b>Tidak VIP</b>"
+    )
+
+    lines = [
+        f"<b>{title}</b>",
+        "═══════✦✧✦═══════\n",
+        f"👤 <b>Nama</b> :</b> {display_name}",
+        f"🆔 <b>ID       :</b> <code>{user_id}</code>\n",
+
+        f"{status_icon} <b>Status VIP</b>",
+        f"└─ 💎<b>Status :</b> {status_text}",
+    ]
 
     if is_vip:
-        text += (
-            f"• Mulai: <code>{format_wib(vip_start)}</code>\n"
-            f"• Berakhir: <code>{format_wib(vip_expired)}</code>\n"
-            f"• ⏳ Sisa: <code>{sisa_waktu(vip_expired)}</code>\n"
-        )
+        lines.extend([
+            f"├─ 📆 <b>Mulai    :</b> <code>{format_wib(vip_start)}</code>",
+            f"├─ 🛑 <b>Berakhir :</b> <code>{format_wib(vip_expired)}</code>",
+            f"└─ ⏳ <b>Sisa     :</b> <code>{sisa_waktu(vip_expired)}</code>",
+        ])
 
-    text += (
-        "━━━━━━━━━━━━━━━\n"
-        "💬 Gunakan perintah <code>/vip</code> untuk detail lebih lanjut."
-    )
+    lines.extend([
+        "═══════✦✧✦═══════\n",
+        "💬 Gunakan perintah /status untuk detail lebih lanjut.",
+    ])
 
-    return text
+    return "\n".join(lines)

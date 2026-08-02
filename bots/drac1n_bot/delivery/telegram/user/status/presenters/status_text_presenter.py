@@ -34,6 +34,6 @@ def format_status_text(
         f"├─ ⏳ <b>Aktif dari :</b>\n<code>{format_date(data.get('vip_start'), lang_code)}</code>\n"
         f"└─ 🛑 <b>Berakhir   :</b>\n<code>{format_date(data.get('vip_expired'), lang_code)}</code>\n"
         f"═══════✦✧✦═══════\n\n"
-        f"⭐️ <b>Jumlah Pembelian VIP:</b> <code>{data.get('purchases', 0)}</code> Purchase\n"
+        f"⭐️ <b>Jumlah Pembelian VIP Ke:</b> <code>{data.get('purchases', 0)}</code> Pembelian\n"
         "💎 <b>Gabung VIP Sekarang!</b> Ketik /vip untuk upgrade ke VIP dan dapatkan lebih banyak keuntungan! 🎉"
     )

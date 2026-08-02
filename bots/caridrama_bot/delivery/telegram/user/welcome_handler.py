@@ -3,80 +3,110 @@ import html
 
 from pyrogram import Client, filters
 from pyrogram.enums import ParseMode
-from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup, Message
+from pyrogram.types import (
+    InlineKeyboardButton,
+    InlineKeyboardMarkup,
+    Message,
+)
 
 from configs.logging_setup import log
 
-# Waktu sebelum pesan welcome dihapus otomatis (detik)
 WELCOME_DELETE_DELAY = 300  # 5 menit
 
 
+async def auto_delete_message(message: Message, delay: int):
+    """Hapus pesan otomatis setelah delay."""
+    try:
+        await asyncio.sleep(delay)
+        await message.delete()
+    except Exception as e:
+        log.warning(f"[WELCOME] Gagal hapus pesan welcome: {e}")
+
+
+def build_mentions(users, limit=5):
+    """Buat mention user yang aman untuk HTML."""
+    display_users = users[:limit]
+    extra_count = max(0, len(users) - limit)
+
+    mentions = []
+
+    for user in display_users:
+        safe_name = html.escape(
+            (user.first_name or "User").replace("\n", " ")
+        )
+
+        mentions.append(
+            f"<a href='tg://user?id={user.id}'>{safe_name}</a>"
+        )
+
+    result = ", ".join(mentions)
+
+    if extra_count:
+        result += f" dan {extra_count} lainnya"
+
+    return result
+
+
 def register_welcome_handler(app: Client):
+
     @app.on_message(filters.new_chat_members)
     async def welcome_new_member(client: Client, message: Message):
+
         try:
             chat_id = message.chat.id
             new_users = message.new_chat_members or []
 
-            # Hapus pesan join default dari Telegram
+            if not new_users:
+                return
+
+            # Hapus pesan join bawaan Telegram
             try:
                 await message.delete()
             except Exception as e:
-                log.warning(f"[WELCOME] Gagal hapus pesan join default: {e}")
-
-            # Log siapa saja yang join
-            joined_info = ", ".join(f"{u.id}-{repr(u.first_name)}" for u in new_users)
-            # log.info(f"📥 New members di chat {chat_id}: {joined_info}")
-
-            # Batasi mention agar tidak spam (maksimal 5)
-            limit = 5
-            display_users = new_users[:limit]
-            extra_count = len(new_users) - limit if len(new_users) > limit else 0
-
-            # Buat daftar mention yang aman (escape HTML dan hapus newline)
-            mentions_list = []
-            for user in display_users:
-                safe_name = html.escape((user.first_name or "User")).replace("\n", " ")
-                mentions_list.append(
-                    f"<a href='tg://user?id={user.id}'>{safe_name}</a>"
+                log.warning(
+                    f"[WELCOME] Gagal hapus pesan join default: {e}"
                 )
 
-            mentions = ", ".join(mentions_list)
-            if extra_count > 0:
-                mentions += f" dan {extra_count} lainnya"
+            mentions = build_mentions(new_users)
 
-            # Tombol inline untuk memudahkan pengguna
             keyboard = InlineKeyboardMarkup(
                 [
                     [
                         InlineKeyboardButton(
-                            "🔍 Cari Drama", switch_inline_query_current_chat=""
+                            "🔍 Cari Drama",
+                            switch_inline_query_current_chat=""
                         )
                     ]
                 ]
             )
 
-            # Kirim pesan sambutan
             welcome_text = (
-                f"👋 Selamat datang, {mentions}!\n\n"
-                "Klik tombol di bawah untuk mencari drama favoritmu ⬇️"
+                f"👋 <b>Selamat datang! {mentions}</b>\n\n"
+                "📺 Sekarang kamu bisa mencari drama favorit "
+                "langsung dari grup ini.\n"
+                "🔎 Tekan tombol di bawah lalu ketik judul drama "
+                "yang ingin kamu cari 👇"
             )
 
             sent_msg = await client.send_message(
-                chat_id,
-                welcome_text,
-                reply_markup=keyboard,
+                chat_id=chat_id,
+                text=welcome_text,
                 parse_mode=ParseMode.HTML,
+                reply_markup=keyboard,
                 disable_web_page_preview=True,
             )
 
-            # Hapus otomatis setelah beberapa menit (jika diaktifkan)
+            # Auto delete tanpa blocking handler
             if WELCOME_DELETE_DELAY > 0:
-                await asyncio.sleep(WELCOME_DELETE_DELAY)
-                try:
-                    await sent_msg.delete()
-                except Exception as e:
-                    log.warning(f"[WELCOME] Gagal hapus pesan welcome: {e}")
+                asyncio.create_task(
+                    auto_delete_message(
+                        sent_msg,
+                        WELCOME_DELETE_DELAY
+                    )
+                )
 
         except Exception as e:
-            log.error(f"❌ Error di welcome_new_member handler: {e}", exc_info=True)
+            log.error(
+                f"❌ Error di welcome_new_member handler: {e}",
+                exc_info=True
+            )

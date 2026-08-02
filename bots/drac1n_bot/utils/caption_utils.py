@@ -1,5 +1,60 @@
+import random
+import re
+from html import escape
+
 from config import SOURCE_CHANNEL_MAP
 
+DOCTOR_HOOKS = [
+    "💉 Mereka menghina tabib yang salah...",
+    "🏥 Tak ada yang tahu dia dokter legendaris...",
+    "😷 Saat semua orang putus asa, mereka baru mencarinya...",
+]
+
+RICH_HOOKS = [
+    "💰 Mereka mengusir pewaris keluarga terkaya...",
+    "👑 Wanita miskin itu ternyata konglomerat...",
+]
+
+REVENGE_HOOKS = [
+    "🥀 Dibuang keluarganya, kini semua menyesal...",
+    "🔥 Orang yang mereka hina akhirnya kembali...",
+]
+
+ROMANCE_HOOKS = [
+    "💔 Dia baru sadar siapa pria yang dinikahinya...",
+    "😭 Mantannya akhirnya menyesal...",
+]
+
+DEFAULT_HOOKS = [
+    "👀 Rahasia besarnya akhirnya terbongkar...",
+]
+
+CTA_TITLES = [
+    "💔 Lanjut Cerita yang Bikin Hancur",
+    "🔥 Ending yang Tidak Terduga",
+    "👀 Jangan Lewatkan Bagian Ini",
+    "😱 Semua Terungkap di Sini",
+    "📺 Lanjut ke Twist Berikutnya",
+]
+
+CTA_SUBTITLES = [
+    "💎 Full episode tanpa iklan",
+    "💎 Akses sebelum dihapus",
+    "💎 Unlock cerita lengkap sekarang",
+]
+
+CLIFFHANGERS = [
+    "💔 Ternyata orang yang ia percaya… adalah orang yang menghancurkannya...",
+    "😱 Fakta yang disembunyikan akhirnya terungkap...",
+    "💀 Tapi semuanya sudah terlambat untuk diperbaiki...",
+    "👀 Dan pria itu tidak pernah benar-benar pergi...",
+    "🔥 Apa yang terjadi setelah itu jauh lebih buruk...",
+]
+
+BAD_ENDINGS = {
+    "dan", "yang", "karena", "untuk",
+    "dengan", "adalah", "bahwa"
+}
 
 def generate_full_caption(
     title,
@@ -13,8 +68,6 @@ def generate_full_caption(
     is_adult=False,
     compact=False,
 ):
-    import re
-    from html import escape
 
     # =====================================================
     # UTIL
@@ -23,7 +76,7 @@ def generate_full_caption(
         return re.sub(r"[\uD800-\uDFFF]", "", text.strip()) if text else ""
 
     def clean_hashtags(tags: str, is_adult: bool):
-        default = ["#dracinshort", "#dramashort", "#dramaglow", "#dramachina"]
+        default = ["#dramachina", "#shortdrama"]
         if is_adult:
             default.append("#dewasa")
 
@@ -47,6 +100,61 @@ def generate_full_caption(
             return start, end, is_end
         return 0, 0, False
 
+    def generate_hook(title, sinopsis):
+        text = f"{title} {sinopsis}".lower()
+
+        if any(k in text for k in [
+            "dokter", "tabib", "rumah sakit", "medis"
+        ]):
+            pool = DOCTOR_HOOKS
+
+        elif any(k in text for k in [
+            "miliarder", "konglomerat", "kaya", "pewaris"
+        ]):
+            pool = RICH_HOOKS
+
+        elif any(k in text for k in [
+            "mantan", "cerai", "suami", "istri"
+        ]):
+            pool = ROMANCE_HOOKS
+
+        elif any(k in text for k in [
+            "dibuang", "pengkhianatan", "balas dendam"
+        ]):
+            pool = REVENGE_HOOKS
+
+        else:
+            pool = DEFAULT_HOOKS
+
+        return random.choice(pool)
+
+    def generate_cta():
+        cliffhanger = random.choice(CLIFFHANGERS)
+        cta_title = random.choice(CTA_TITLES)
+        cta_subtitle = random.choice(CTA_SUBTITLES)
+
+        return cliffhanger, cta_title, cta_subtitle
+
+    def shorten_sinopsis(text, limit=140):
+        text = clean(text)
+
+        if not text:
+            return ""
+
+        text = re.sub(r"\s+", " ", text).strip()
+
+        if len(text) <= limit:
+            return text
+
+        shortened = text[:limit].rsplit(" ", 1)[0]
+
+        last_word = shortened.split()[-1].lower()
+
+        if last_word in BAD_ENDINGS:
+            shortened = shortened.rsplit(" ", 1)[0]
+
+        return shortened + "..."
+
     def build_source_block(code: str, label: str):
         key = code.lower().strip()
         channels = SOURCE_CHANNEL_MAP.get(key)
@@ -68,11 +176,26 @@ def generate_full_caption(
     # CLEAN INPUT
     # =====================================================
     title = clean(title)
+
     genre = clean(genre)
-    sinopsis = clean(sinopsis)
+
+    sinopsis = shorten_sinopsis(sinopsis)
+
+    if sinopsis.lower() == "none":
+        sinopsis = ""
+
+    hashtags = clean(hashtags)
+
+    if hashtags.lower() in ["none", "#none"]:
+        hashtags = ""
+
     source_code = clean(source_code)
     source_label = clean(source_label)
+
     hashtags = clean_hashtags(hashtags, is_adult)
+
+    hook = generate_hook(title, sinopsis)
+    cliffhanger, cta_title, cta_subtitle = generate_cta()
 
     total_files = len(files)
     max_episode = 0
@@ -103,37 +226,49 @@ def generate_full_caption(
         else:
             is_free = False
 
-        text = "🆓 Free Access" if is_free else "🔐 VIP Exclusive"
+        text = "▶️ <b>Mulai Nonton</b> 👈 <i>Klik Disini</i>" if is_free else "🔐 <b>VIP Exclusive</b>"
         link_hash = free_hash if is_free else paid_hash
         link = f"https://t.me/{bot_username}?start={link_hash}"
 
-        full_label = f"<b>Episode {label}</b>"
+        full_label = f"🎁 <b>Episode {label} • GRATIS</b>"
         episode_lines.append(f'{full_label}\n<a href="{link}">{text}</a>\n')
 
     # =====================================================
     # COMPACT LIMIT LOGIC (PHOTO MODE)
     # =====================================================
-    MAX_PHOTO_BLOCK = 3
+    MAX_FULL_BLOCK = 1
+    MAX_COMPACT_BLOCK = 1
+
     total_blocks = len(episode_lines)
 
     if compact:
-        if total_blocks > MAX_PHOTO_BLOCK:
-            visible_blocks = episode_lines[:MAX_PHOTO_BLOCK]
-            visible_blocks.append("\n🔽 <i>Episode lainnya tersedia di bot</i>\n")
-        else:
-            visible_blocks = episode_lines
+        visible_blocks = episode_lines[:MAX_COMPACT_BLOCK]
+
+        if total_blocks > MAX_COMPACT_BLOCK:
+            visible_blocks.append(
+                "👀 <i>Lihat kelanjutannya di VIP</i>\n"
+            )
+
     else:
-        visible_blocks = episode_lines
+        visible_blocks = episode_lines[:MAX_FULL_BLOCK]
+
+        if total_blocks > MAX_FULL_BLOCK:
+            visible_blocks.append(
+                "😱 Tapi dia bukan orang yang mereka kira...\n"
+                "💔 Semuanya sudah terlambat...\n"
+            )
 
     # =====================================================
     # CAPTION SECTIONS
     # =====================================================
     sections = []
 
+    # HOOK
+    sections.append(f"{hook}\n")
+
     # HEADER
     header = (
         f"🎬 <b>{escape(title)}</b>\n"
-        "💵 <b>Rp2.300 NONTON SEMUA DRAMA SEHARIAN</b>\n"
         f"{source_text}{source_cta}\n"
         f"<b>{escape(genre)} | Subtitle Indonesia</b>\n"
     )
@@ -145,38 +280,49 @@ def generate_full_caption(
 
     # SINOPSIS (hanya kalau ada & bukan compact)
     if sinopsis and not compact:
-        sections.append("<b>📝 SINOPSIS</b>\n" f"{escape(sinopsis)}\n")
+
+        safe_sinopsis = (
+            sinopsis
+            .replace("\r", "")
+            .strip()
+        )
+
+        safe_sinopsis = re.sub(
+            r"\n{3,}",
+            "\n\n",
+            safe_sinopsis
+        )
+
+        sections.append(
+            "📝 <b>SINOPSIS</b>\n"
+            f"<i>{safe_sinopsis}</i>\n"
+        )
 
     # EPISODE LIST
     sections.append(
-        "<b><u>📜 LINK EPISODE 📜</u></b>\n"
+        # "<b><u>🎬 TONTON SEKARANG</u></b>\n"
         "═══════✦✧✦═══════\n" + "\n".join(visible_blocks) + "═══════✦✧✦═══════\n"
     )
 
     # CTA / MARKETING
     if compact:
         sections.append(
-            "\n<b>💠 VIP:</b> "
-            '<a href="https://t.me/drac1n_bot?start=vip">Akses</a> | '
-            '<a href="https://t.me/drac1n_bot?start=referral">Partner</a>\n'
+            f'👀 <a href="https://t.me/{bot_username}?start=vip">'
+            f'<b>Lihat Kelanjutannya</b></a>\n'
+            f'{VIP_PRICE_TEXT}\n'
         )
     else:
         sections.append(
-            "<b>💰 Mau cuan cuma modal rebahan?</b>\n"
-            '<a href="https://t.me/drac1n_bot?start=referral">'
-            "Gabung jadi partner promosi</a>\n\n"
-            "<b>💠 AKSES VIP - TONTON BEBAS</b>\n"
-            '<a href="https://t.me/drac1n_bot?start=vip">Klik Disini</a>\n\n'
-            "<b>🌐 VIP Manual:</b>\n"
-            '<a href="https://t.me/c/2856310074/3">Indonesia</a> | '
-            '<a href="https://t.me/c/3871945880/3">Malaysia</a>\n\n'
-            "<b>📖 PANDUAN & BANTUAN</b>\n"
-            '📚 <a href="https://t.me/tutorialvip1/22">Panduan VIP</a>\n'
-            "📞 Admin: @mimindcstv | @admischelia\n\n"
-            "<b>⚠️ UNTUK YANG MAU REQUES DRAMA SILAHKAN KLIK DI BAWAH INI</b>\n"
-            '🚀 <a href="https://t.me/dcstvgrup">DCSTV GRUP</a>\n'
-        )
+            f"{cliffhanger}\n\n"
+            f'<a href="https://t.me/{bot_username}?start=vip">'
+            f"<b>{cta_title}</b></a> 👈\n"
+            f"<i>{cta_subtitle}</i>\n\n"
 
+            f"📖 <b>PANDUAN & BANTUAN</b>\n"
+            f'📚 <a href="https://t.me/tutorialvip1/22">'
+            f"<b>Panduan VIP</b></a>\n"
+            f"📞 <b>Admin:</b> @mimindcstv\n\n"
+        )
     # HASHTAGS
     sections.append(escape(hashtags))
 
@@ -184,3 +330,4 @@ def generate_full_caption(
     # FINAL CAPTION
     # =====================================================
     return "\n".join(sections).strip()
+

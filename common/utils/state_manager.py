@@ -1,108 +1,70 @@
 import json
-
+from typing import Any, Optional
 from configs.logging_setup import log
 from db.connect import get_db_cursor
 
-# Set ini menyimpan user yang sedang dalam proses input channel
-adding_channel_users = set()
-search_prompts = {}
+# =====================================================
+# IN-MEMORY STATE (HATI-HATI: BELUM DI-LOCK)
+# =====================================================
+adding_channel_users: set[int] = set()
+search_prompts: dict[int, Any] = {}
 
-# ============================================ #
-# === STATE: ADD, DELETE, UPDATE, VIEW ADMIN === #
-# ============================================ #
+# =====================================================
+# STEP KEYS (FSM DOMAIN)
+# =====================================================
+STEP_KEYS = {
+    "regular_step",
+    "vip_add_step",
+    "vip_delete_step",
+    "feedback_step",
+}
 
-
-def set_state(admin_id: int, value: dict) -> None:
-    val_str = json.dumps(value)
-    try:
-        with get_db_cursor() as (cursor, conn):
-            cursor.execute(
-                """
-                INSERT INTO admin_state(admin_id, step)
-                VALUES (%s, %s)
-                ON CONFLICT (admin_id) DO UPDATE
-                SET step = EXCLUDED.step
-                """,
-                (admin_id, val_str),
-            )
-            conn.commit()
-            log.info(f"[STATE] set_state berhasil untuk admin_id={admin_id}")
-    except Exception as e:
-        log.error(f"Gagal set_state untuk admin_id {admin_id}: {e}", exc_info=True)
-        raise
+# =====================================================
+# NORMALIZATION
+# =====================================================
+def normalize_step(value: Any) -> Optional[str]:
+    if isinstance(value, (tuple, list)):
+        value = value[0] if value else None
+    return str(value) if value is not None else None
 
 
-def get_state(admin_id: int) -> dict | None:
-    try:
-        with get_db_cursor() as (cursor, _):
-            cursor.execute(
-                "SELECT step FROM admin_state WHERE admin_id = %s", (admin_id,)
-            )
-            row = cursor.fetchone()
-            if row:
-                try:
-                    return json.loads(row[0])
-                except json.JSONDecodeError:
-                    log.error(f"Data state JSON rusak untuk admin_id {admin_id}")
-                    return None
-            return None
-    except Exception as e:
-        log.error(f"Gagal get_state untuk admin_id {admin_id}: {e}", exc_info=True)
+def normalize_raw_value(value: Any, key: str | None = None) -> Any:
+    if isinstance(value, (tuple, list)):
+        value = value[0] if value else None
+
+    if value in (None, "", "null", "None"):
         return None
 
+    # STEP DOMAIN
+    if key in STEP_KEYS:
+        return str(value)
 
-def clear_state(admin_id: int) -> None:
+    # DATA DOMAIN
+    if isinstance(value, str):
+        try:
+            return json.loads(value)
+        except Exception:
+            return value
+
+    return value
+
+
+# =====================================================
+# MAIN STATE (HARD PERSISTED FSM STORAGE)
+# =====================================================
+def set_admin_temp_state(admin_id: int, key: str, value: Any) -> None:
     try:
-        with get_db_cursor() as (cursor, conn):
-            cursor.execute("DELETE FROM admin_state WHERE admin_id = %s", (admin_id,))
-            conn.commit()
-            log.info(f"[STATE] clear_state berhasil untuk admin_id={admin_id}")
-    except Exception as e:
-        log.error(f"Gagal clear_state untuk admin_id {admin_id}: {e}", exc_info=True)
-        raise
+        # STEP DOMAIN
+        if key in STEP_KEYS:
+            value = normalize_step(value)
 
+        # DATA DOMAIN
+        else:
+            if isinstance(value, (tuple, list)):
+                value = value[0] if value else None
 
-def has_state(admin_id: int) -> bool:
-    try:
-        with get_db_cursor() as (cursor, _):
-            cursor.execute("SELECT 1 FROM admin_state WHERE admin_id = %s", (admin_id,))
-            return cursor.fetchone() is not None
-    except Exception as e:
-        log.error(f"Gagal has_state untuk admin_id {admin_id}: {e}", exc_info=True)
-        return False
-
-
-# ========================================== #
-# === TEMP STATE: ADD, DELETE VIP USER ===== #
-# ========================================== #
-
-
-def get_all_admin_temp_states(admin_id: int) -> dict:
-    try:
-        with get_db_cursor() as (cursor, _):
-            cursor.execute(
-                "SELECT key, value FROM admin_temp_state WHERE admin_id = %s",
-                (admin_id,),
-            )
-            rows = cursor.fetchall()
-            return {key: value for key, value in rows} if rows else {}
-    except Exception as e:
-        log.error(
-            f"[STATE] Gagal ambil semua temp state untuk admin_id={admin_id}: {e}",
-            exc_info=True,
-        )
-        return {}
-
-
-def set_admin_temp_state(admin_id: int, key: str, value) -> None:
-    try:
-        # Pastikan value adalah string, jika dict atau tipe lain, konversi ke JSON
-        if not isinstance(value, str):
-            try:
-                value = json.dumps(value)
-            except Exception as e:
-                log.error(f"[STATE] Gagal JSON encode value={value}: {e}")
-                return
+            if not isinstance(value, str):
+                value = json.dumps(value, ensure_ascii=False)
 
         with get_db_cursor() as (cursor, conn):
             cursor.execute(
@@ -116,26 +78,19 @@ def set_admin_temp_state(admin_id: int, key: str, value) -> None:
             )
             conn.commit()
 
-            log.info(
-                f"[STATE] Set temp state sukses: admin_id={admin_id}, key={key}, value={value}"
-            )
+        log.info("[STATE] SET admin=%s key=%s value=%s", admin_id, key, value)
 
-            # Debug tambahan
-            cursor.execute(
-                "SELECT value FROM admin_temp_state WHERE admin_id = %s AND key = %s",
-                (admin_id, key),
-            )
-            val = cursor.fetchone()
-            log.info(f"[STATE] Setelah commit, nilai tersimpan: {val}")
     except Exception as e:
         log.error(
-            f"[STATE] Gagal set temp state (admin_id={admin_id}, key={key}): {e}",
+            "[STATE] SET FAIL admin=%s key=%s err=%s",
+            admin_id,
+            key,
+            e,
             exc_info=True,
         )
 
 
 def get_admin_temp_state(admin_id: int, key: str, default=None):
-    log.debug(f"[STATE] Mengambil temp state (admin_id={admin_id}, key={key})")
     try:
         with get_db_cursor() as (cursor, _):
             cursor.execute(
@@ -145,31 +100,37 @@ def get_admin_temp_state(admin_id: int, key: str, default=None):
                 """,
                 (admin_id, key),
             )
-            result = cursor.fetchone()
-            if result:
-                raw_val = result[0]
-                log.debug(f"[STATE] Ditemukan value: {raw_val}")
 
-                # Perlakuan khusus untuk nilai kosong atau 'null'
-                if raw_val in [None, "", "null", "None"]:
-                    return default
+            row = cursor.fetchone()
+            if not row:
+                return default
 
-                return raw_val
-            log.debug(f"[STATE] Tidak ditemukan value. Kembalikan default.")
-            return default
+            raw_val = row[0]
+            val = normalize_raw_value(raw_val, key)
+
+            if val is None:
+                return default
+
+            return val
+
     except Exception as e:
         log.error(
-            f"[STATE] Gagal ambil temp state (admin_id={admin_id}, key={key}): {e}",
+            "[STATE] GET FAIL admin=%s key=%s err=%s",
+            admin_id,
+            key,
+            e,
             exc_info=True,
         )
         return default
 
 
-def clear_admin_temp_state(admin_id: int, prefix: str = None) -> None:
+# =====================================================
+# CLEAR STATE
+# =====================================================
+def clear_admin_temp_state(admin_id: int, prefix: str | None = None) -> None:
     try:
         with get_db_cursor() as (cursor, conn):
             if prefix:
-                # Hapus hanya yang dimulai dengan prefix (misal: 'utbk_')
                 cursor.execute(
                     """
                     DELETE FROM admin_temp_state
@@ -177,69 +138,53 @@ def clear_admin_temp_state(admin_id: int, prefix: str = None) -> None:
                     """,
                     (admin_id, f"{prefix}%"),
                 )
-                log.info(
-                    f"[STATE] clear_admin_temp_state dengan prefix '{prefix}' untuk admin_id={admin_id}"
-                )
             else:
-                # Hapus semua state admin (fallback lama)
                 cursor.execute(
-                    "DELETE FROM admin_temp_state WHERE admin_id = %s", (admin_id,)
+                    "DELETE FROM admin_temp_state WHERE admin_id = %s",
+                    (admin_id,),
                 )
-                log.info(
-                    f"[STATE] clear_admin_temp_state (semua key) untuk admin_id={admin_id}"
-                )
+
             conn.commit()
+
+        log.info("[STATE] CLEAR admin=%s prefix=%s", admin_id, prefix)
+
     except Exception as e:
         log.error(
-            f"[STATE] Gagal hapus temp state admin_id={admin_id} (prefix={prefix}): {e}",
+            "[STATE] CLEAR FAIL admin=%s prefix=%s err=%s",
+            admin_id,
+            prefix,
+            e,
             exc_info=True,
         )
 
 
-def clear_admin_state_all_bots(admin_id: int):
-    return clear_admin_temp_state(admin_id, prefix=None)
+def clear_state(admin_id: int) -> None:
+    clear_admin_temp_state(admin_id)
 
 
-# ========================================== #
-# === UTILITAS PENDUKUNG =================== #
-# ========================================== #
-
-
-def get_current_admin_steps(user_id: int) -> dict:
-    state = get_state(user_id) or {}
-    return {
-        "regular_step": state.get("regular_step"),
-        "vip_add_step": state.get("vip_add_step"),
-        "vip_delete_step": state.get("vip_delete_step"),
-    }
-
-
-def get_json_temp_state(admin_id: int, key: str, default=None):
-    val = get_admin_temp_state(admin_id, key)
-    if val is None:
-        return default
+# =====================================================
+# BULK STATE INSPECTION
+# =====================================================
+def get_all_admin_temp_states(admin_id: int) -> dict:
     try:
-        return json.loads(val)
+        with get_db_cursor() as (cursor, _):
+            cursor.execute(
+                "SELECT key, value FROM admin_temp_state WHERE admin_id = %s",
+                (admin_id,),
+            )
+            rows = cursor.fetchall()
+
+        return {k: v for k, v in rows} if rows else {}
+
     except Exception as e:
-        log.error(
-            f"[STATE] Gagal decode JSON dari key={key} untuk admin_id={admin_id}: {e}"
-        )
-        return default
+        log.error("[STATE] BULK GET FAIL admin=%s err=%s", admin_id, e)
+        return {}
 
 
-def is_state_expired(state_value) -> bool:
-    # Implementasi TTL jika diperlukan
-    # Contoh:
-    # import time
-    # return time.time() > state_value.get("expires_at", 0)
-    return False  # Placeholder
-
-
+# =====================================================
+# DEBUG DUMP
+# =====================================================
 def print_admin_states(admin_id: int, prefix_filter: str | None = None):
-    """
-    Cetak semua state admin_id tertentu.
-    Jika prefix_filter diberikan (misal 'drac1n_', 'utbk_'), hanya tampilkan key yang sesuai.
-    """
     try:
         with get_db_cursor() as (cursor, _):
             if prefix_filter:
@@ -260,21 +205,21 @@ def print_admin_states(admin_id: int, prefix_filter: str | None = None):
                     """,
                     (admin_id,),
                 )
+
             rows = cursor.fetchall()
 
-            if not rows:
-                print(f"Tidak ada state untuk admin_id={admin_id}")
-                return
+        if not rows:
+            print(f"Tidak ada state untuk admin_id={admin_id}")
+            return
 
-            print(f"\n🧠 State untuk admin_id={admin_id}:")
-            for key, value in rows:
-                try:
-                    parsed = json.loads(value)
-                except Exception:
-                    parsed = value
-                print(f"🔑 {key}: {parsed}")
+        print(f"\n🧠 STATE DUMP admin_id={admin_id}")
+
+        for k, v in rows:
+            try:
+                v = json.loads(v)
+            except Exception:
+                pass
+            print(f"{k}: {v}")
 
     except Exception as e:
-        log.error(
-            f"[DEBUG] Gagal print_admin_states admin_id={admin_id}: {e}", exc_info=True
-        )
+        log.error("[DEBUG STATE DUMP FAIL] admin=%s err=%s", admin_id, e)

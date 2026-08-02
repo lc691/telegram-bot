@@ -3,7 +3,7 @@ from pytz import timezone
 from pyrogram import Client
 from pyrogram.types import Message
 
-from config import POSTING_CHANNEL
+from config import POSTING_TEST
 from configs.logging_setup import log
 
 from .voucher_parser import parse_voucher_command
@@ -44,7 +44,7 @@ async def handle_voucher_command(client: Client, message: Message):
         )
 
         await client.send_message(
-            chat_id=POSTING_CHANNEL,
+            chat_id=POSTING_TEST,
             text=text,
             parse_mode="html",
             reply_markup=build_voucher_keyboard(),

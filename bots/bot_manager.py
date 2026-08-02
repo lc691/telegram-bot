@@ -62,7 +62,7 @@ class BotManager:
             self.handler_register_func(app, admin_cache)
 
             self._started = True
-            log.info("Bot %s started successfully", self.name)
+            log.info("[%s] started successfully", self.name)
             return True
 
         except Exception:

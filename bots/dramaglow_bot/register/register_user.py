@@ -55,4 +55,4 @@ def register_user_cmd_handlers(app: Client, admin_cache: AdminCache) -> None:
     # APPLY TO APP
     # ==================================================
     registry.register_all(app)
-    log.info("🎉 Semua handler user dramaglow_bot berhasil didaftarkan.")
+    # log.info("🎉 Semua handler user dramaglow_bot berhasil didaftarkan.")

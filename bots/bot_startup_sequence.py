@@ -87,4 +87,4 @@ def start_global_tasks_once(app: Client) -> None:
             reminder_loop(app),
             name="global-reminder",
         )
-        log.info("Global reminder loop started")
+        # log.info("Global reminder loop started")

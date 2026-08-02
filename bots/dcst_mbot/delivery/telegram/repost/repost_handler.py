@@ -70,8 +70,8 @@ def register_repost_handler(app: Client) -> None:
 
     backup_channels = _normalize_channels(BACKUP_CHANNEL)
 
-    log.info(f"[REPOST] Handler registered for: {posting_channel}")
-    log.info(f"[REPOST] Backup channels: {backup_channels}")
+    # log.info(f"[REPOST] Handler registered for: {posting_channel}")
+    # log.info(f"[REPOST] Backup channels: {backup_channels}")
 
     @app.on_message(filters.chat(posting_channel))
     async def repost_handler(client: Client, message: Message):

@@ -12,4 +12,4 @@ def register_callback_handlers(app: Client) -> None:
     registry.add("callback_admin", register_all_callbacks)
     registry.register_all(app)
 
-    log.info("🎉 Callback handlers dramaglow_bot didaftarkan.")
+    # log.info("🎉 Callback handlers dramaglow_bot didaftarkan.")

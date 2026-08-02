@@ -8,89 +8,156 @@ def build_vip_message(
     username: str,
     paket: str,
     mention: str,
-    mode: str,  # "baru" | "extend"
+    mode: str,
     via_voucher: bool,
     basic_days: int,
     bonus_days: int,
     old_vip_end,
     new_vip_end,
+    purchases: int = 1,
 ) -> str:
     """
-    Bangun pesan pengumuman VIP.
-    PURE presenter (tanpa logic bisnis).
+    Build VIP announcement message.
+    Pure presenter only.
     """
+
+    # =====================================================
+    # SAFE DATA
+    # =====================================================
+
     paket_safe = html.escape(paket)
 
-    # --- Format waktu ke WIB ---
-    old_vip_end_str = format_wib(old_vip_end) if old_vip_end else "–"
+    old_vip_end_str = (
+        format_wib(old_vip_end)
+        if old_vip_end
+        else None
+    )
+
     new_vip_end_str = format_wib(new_vip_end)
 
-    # --- Durasi paket ---
+    purchases = max(1, purchases)
+
+    # =====================================================
+    # DURATION INFO
+    # =====================================================
+
+    total_days = basic_days + bonus_days
+
     durasi_text = f"<b>{basic_days} hari</b>"
-    bonus_text = f" (+{bonus_days} hari 🎁)" if bonus_days > 0 else ""
-    total_text = f"<b>{basic_days + bonus_days} hari</b>"
 
-    # --- Header & pesan ---
+    bonus_text = (
+        f" (+{bonus_days} hari 🎁)"
+        if bonus_days > 0
+        else ""
+    )
+
+    total_text = f"<b>{total_days} hari</b>"
+
+    # =====================================================
+    # HEADER
+    # =====================================================
+
     if via_voucher:
-        header = "🎉🎁 <b>VOUCHER VIP SUKSES DIREDEEM!</b> 🎁🎉"
-        if mode == "baru":
-            extra_line = f"📅 Durasi Voucher:\n   └─ {durasi_text}"
-        else:
-            extra_line = (
-                f"📅 Tambahan Voucher:\n   └─ {durasi_text}{bonus_text}\n\n"
-                f"📆 Total Ditambahkan:\n   └─ {total_text}"
-            )
-        hashtags = "#VoucherVIP #Redeem" + (" #Extend" if mode == "extend" else "")
-    else:
-        if mode == "baru":
-            header = "🎉 <b>SELAMAT! VIP Telah Aktif</b> 🎉"
-            extra_line = (
-                f"📅 Durasi Awal:\n   └─ {durasi_text}{bonus_text}\n\n"
-                f"📆 Total Aktif:\n   └─ {total_text}"
-            )
-            hashtags = "#VIP #Baru #Streaming"
-        else:
-            header = "🎉 <b>VIP Berhasil Diperpanjang</b> 🎉"
-            extra_line = (
-                f"📅 Durasi Tambahan:\n   └─ {durasi_text}{bonus_text}\n\n"
-                f"📆 Total Ditambahkan:\n   └─ {total_text}"
-            )
-            hashtags = "#VIP #Extend #Streaming"
 
-    # --- Footer keistimewaan (VIP baru non-voucher) ---
-    vip_footer = ""
-    if not via_voucher and mode == "baru":
-        vip_footer = (
-            "\n🚀 <b>Keistimewaan VIP:</b>\n"
-            "✅ Streaming bebas iklan\n"
-            "✅ Akses episode lebih awal\n"
-            "✅ Konten premium eksklusif\n"
-            "✅ Grup diskusi VIP"
+        header = (
+            "🎁 <b>VOUCHER VIP BERHASIL DIREDEEM!</b>"
         )
 
-    # --- Hashtag paket --- 
-    paket_tag = re.sub(r"[^0-9A-Za-z]", "", paket_safe)
+        hashtags = "#VoucherVIP #PremiumAccess"
+
+    else:
+
+        if mode == "baru":
+
+            header = (
+                "💎 <b> VIP AKTIF — PREMIUM ACCESS</b>"
+            )
+
+            hashtags = "#VIP #New #PremiumAccess"
+
+        else:
+
+            header = (
+                "♻️ <b>VIP BERHASIL DIPERPANJANG</b>"
+            )
+
+            hashtags = "#VIP #Extend #StayPremium"
+
+    # =====================================================
+    # DETAIL BLOCK
+    # =====================================================
+
+    detail_block = (
+        f"📊 <b>Durasi:</b> {durasi_text}{bonus_text}\n"
+        f"➕ <b>Total Benefit:</b> {total_text}"
+    )
+
+    # =====================================================
+    # VIP BENEFITS
+    # =====================================================
+
+    if mode == "baru":
+
+        vip_value = (
+            "\n👑 <b>Benefit VIP Aktif:</b>\n"
+            "├─ Streaming bebas iklan\n"
+            "├─ Akses lebih cepat\n"
+            "├─ Konten premium eksklusif\n"
+            "└─ Prioritas member VIP"
+        )
+
+    else:
+
+        vip_value = (
+            "\n👑 <b>Akses VIP tetap aktif.</b>"
+        )
+
+    # =====================================================
+    # PACKAGE TAG
+    # =====================================================
+
+    paket_tag = re.sub(
+        r"[^0-9A-Za-z]",
+        "",
+        paket_safe,
+    )
+
     if paket_tag:
         hashtags += f" #VIP_{paket_tag}"
 
-    # --- Build pesan final ---
+    # =====================================================
+    # OPTIONAL OLD VIP INFO
+    # =====================================================
+
+    old_block = ""
+
+    if old_vip_end_str and mode == "extend":
+
+        old_block = (
+            f"\n⏳ <b>VIP Sebelumnya:</b>\n"
+            f"<code>{old_vip_end_str}</code>\n"
+        )
+
+    # =====================================================
+    # FINAL MESSAGE
+    # =====================================================
+
     msg = f"""
 {header}
-━━━━━━━━━━━━━━━━━━━━━━━
-👑 Pengguna: {mention}
-📦 Paket : <code>{paket_safe}</code>
 
-⏳ VIP Sebelumnya:
-   └─ <code>{old_vip_end_str}</code>
+👤 <b>User:</b> {mention}
+📦 <b>Paket:</b> <code>{paket_safe}</code>
+⭐ <b>Pembelian ke:</b> {purchases}
 
-{extra_line}
+═══════✦✧✦═══════
+{detail_block}
+{old_block}
+📆 <b>Aktif Sampai:</b>
+<code>{new_vip_end_str}</code>
+{vip_value}
+═══════✦✧✦═══════
 
-📆 VIP Aktif Hingga:
-   └─ <code>{new_vip_end_str}</code>
-{vip_footer}
-━━━━━━━━━━━━━━━━━━━━━━━
 {hashtags}
 """.strip()
 
-    # Hapus newline berlebih
-    return msg.replace("\n\n\n", "\n\n")
+    return re.sub(r"\n{3,}", "\n\n", msg)

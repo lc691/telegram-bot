@@ -32,12 +32,14 @@ async def show_vip_entry(
     )
 
     text = (
-        "🚫 <b>Akun GRATIS dibatasi</b>\n\n"
-        "🔒 Episode VIP terkunci\n"
-        "⚡ Tanpa iklan & tanpa delay\n"
-        "🚀 Akses penuh tanpa batas\n\n"
-        "💡 <i>9 dari 10 user VIP tidak kembali ke versi gratis</i>\n\n"
-        "👇 <b>Aktifkan VIP sekarang</b>"
+        "🔒 <b>Konten VIP terkunci</b>\n\n"
+        "═══════✦✧✦═══════\n"
+        "🎬 Buka semua episode VIP\n"
+        "⚡ Tanpa delay\n"
+        "✨ Tanpa iklan mengganggu\n"
+        "🚀 Streaming tanpa batas\n"
+        "═══════✦✧✦═══════\n"
+        
     )
 
     try:

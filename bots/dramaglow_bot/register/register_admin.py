@@ -44,4 +44,4 @@ def register_admin_handlers(app: Client) -> None:
     registry.add("voucher", register_voucher_command_handler)
     registry.add("leaderboard", register_leaderboard)
     registry.register_all(app)
-    log.info("🎉 Admin handlers dramaglow_bot didaftarkan.")
+    # log.info("🎉 Admin handlers dramaglow_bot didaftarkan.")

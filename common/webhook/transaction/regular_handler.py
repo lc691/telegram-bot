@@ -1,7 +1,6 @@
-# =====================[ PROSES DONASI REGULER - FINAL ]=====================
+# =====================[ PROSES DONASI REGULER - FINAL SAFE ]=====================
 
 import re
-
 from asyncio import create_task
 from datetime import datetime
 from typing import Tuple
@@ -12,9 +11,7 @@ from pyrogram import Client
 from common.bot_utils import get_clean_bot_key
 from common.messaging.email_responder import send_email_reply_async
 from common.messaging.notification_regular_group import send_donation_group_announcement
-from common.messaging.regular.normalize_donation_message import (
-    normalize_donation_message,
-)
+from common.messaging.regular.normalize_donation_message import normalize_donation_message
 from common.webhook.utils.trakteer_transactions import calculate_amount
 from config import POSTING_CHANNEL, SPECIAL_DONORS
 from configs.logging_setup import log
@@ -27,65 +24,42 @@ async def process_regular_donation(
     message: str,
     fallback_bot: str = "drac1n",
 ) -> Tuple[str, int]:
-    """
-    Proses donasi reguler.
-    Clean logging, fail-safe, production ready.
-    """
 
     tx_id = data.get("transaction_id", "<no-txid>")
     log.info("[DONATION] ▶ start tx_id=%s", tx_id)
 
-    # =====================================================
-    # STEP 1 — Calculate amount
-    # =====================================================
+    # =========================
+    # STEP 1 — Amount
+    # =========================
     try:
         amount, amount_source = calculate_amount(data)
     except Exception:
-        log.exception("[DONATION] ❌ amount calculation failed tx_id=%s", tx_id)
+        log.exception("[DONATION] amount calculation failed tx_id=%s", tx_id)
         return "Internal error", 500
 
     if amount <= 0:
-        log.warning(
-            "[DONATION] ❌ invalid amount tx_id=%s amount=%s",
-            tx_id,
-            amount,
-        )
+        log.warning("[DONATION] invalid amount tx_id=%s", tx_id)
         return "Jumlah donasi tidak valid", 400
 
-    log.debug(
-        "[DONATION] amount calculated tx_id=%s amount=%s source=%s",
-        tx_id,
-        amount,
-        amount_source,
-    )
-
-    # =====================================================
-    # STEP 2 — Extract supporter & email
-    # =====================================================
+    # =========================
+    # STEP 2 — Identity
+    # =========================
     raw_supporter_name = (data.get("supporter_name") or "").strip()
     raw_email = (data.get("email") or "").strip()
 
     if not raw_email and raw_supporter_name:
         raw_email = f"{raw_supporter_name}@trakteer"
 
-    if raw_email and re.match(r"[^@]+@[^@]+\.[^@]+", raw_email):
-        email = raw_email
-    else:
-        email = "unknown"
+    email = raw_email if re.match(r"[^@]+@[^@]+\.[^@]+", raw_email) else "unknown"
 
-    # =====================================================
-    # STEP 3 — Resolve donor display name
-    # =====================================================
-    if raw_supporter_name:
-        donor_name = raw_supporter_name
-    elif email != "unknown":
-        donor_name = email.split("@", 1)[0]
-    else:
-        donor_name = "User"
+    donor_name = (
+        raw_supporter_name
+        or (email.split("@")[0] if email != "unknown" else "User")
+    )
 
-    # =====================================================
-    # STEP 4 — Resolve source bot
-    # =====================================================
+    # =========================
+    # STEP 3 — Bot source
+    # =========================
     source_bot = fallback_bot
     match = re.search(r"@(\w+)", message or "")
     if match:
@@ -93,17 +67,9 @@ async def process_regular_donation(
         if clean_bot:
             source_bot = clean_bot
 
-    log.debug(
-        "[DONATION] parsed tx_id=%s donor=%s email=%s bot=%s",
-        tx_id,
-        donor_name,
-        email,
-        source_bot,
-    )
-
-    # =====================================================
-    # STEP 5 — Save donation log (BEST EFFORT)
-    # =====================================================
+    # =========================
+    # STEP 4 — Log DB (safe)
+    # =========================
     try:
         insert_donation_log(
             email=email,
@@ -115,20 +81,17 @@ async def process_regular_donation(
             source_bot=source_bot,
         )
     except Exception:
-        log.warning(
-            "[DONATION] log insert failed tx_id=%s",
-            tx_id,
-            exc_info=True,
-        )
+        log.warning("[DONATION] log insert failed tx_id=%s", tx_id, exc_info=True)
 
-    # =====================================================
-    # STEP 6 — Special donor email (ASYNC)
-    # =====================================================
-    if email != "unknown":
-        reply = SPECIAL_DONORS.get(email)
-        if reply:
+    # =========================
+    # STEP 5 — Special donor (FIXED)
+    # =========================
+    if email != "unknown" and isinstance(SPECIAL_DONORS, dict):
+        special_msg = SPECIAL_DONORS.get(email)
+
+        if special_msg:
             try:
-                create_task(send_email_reply_async(email, reply))
+                create_task(send_email_reply_async(email, special_msg))
                 log.debug(
                     "[DONATION] special email queued tx_id=%s email=%s",
                     tx_id,
@@ -136,34 +99,32 @@ async def process_regular_donation(
                 )
             except Exception:
                 log.warning(
-                    "[DONATION] special email failed tx_id=%s email=%s",
+                    "[DONATION] special email failed tx_id=%s",
                     tx_id,
-                    email,
                     exc_info=True,
                 )
 
-    # =====================================================
-    # STEP 7 — Normalize donation message
-    # =====================================================
+    # =========================
+    # STEP 6 — Normalize message
+    # =========================
     donation_message, note_empty = normalize_donation_message(message)
 
-    # =====================================================
-    # STEP 8 — Parse transaction time (WIB)
-    # =====================================================
+    # =========================
+    # STEP 7 — Time
+    # =========================
     try:
         created_at = data.get("created_at")
-        if created_at:
-            tx_time = datetime.fromisoformat(created_at).astimezone(
-                ZoneInfo("Asia/Jakarta")
-            )
-        else:
-            tx_time = datetime.now(ZoneInfo("Asia/Jakarta"))
+        tx_time = (
+            datetime.fromisoformat(created_at).astimezone(ZoneInfo("Asia/Jakarta"))
+            if created_at
+            else datetime.now(ZoneInfo("Asia/Jakarta"))
+        )
     except Exception:
         tx_time = datetime.now(ZoneInfo("Asia/Jakarta"))
 
-    # =====================================================
-    # STEP 9 — Send group notification (CORE OUTPUT)
-    # =====================================================
+    # =========================
+    # STEP 8 — Send notification
+    # =========================
     await send_donation_group_announcement(
         app=app,
         chat_id=POSTING_CHANNEL,

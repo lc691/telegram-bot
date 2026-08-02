@@ -122,26 +122,17 @@ def parse_vip_dates(new_expired, total_days):
 # ===============================
 # 🔹 Tandai User Sudah Diingatkan
 # ===============================
-def mark_vip_notified(user_id: int, source_bot: str = "drac1n"):
-    """Menandai bahwa user sudah diingatkan mengenai status VIP-nya."""
-    table = get_table_name(source_bot)
-    if not table:
-        log.error(f"[MARK NOTIFIED] ❌ Bot tidak valid: {source_bot}")
-        return
-
-    try:
-        with get_db_cursor() as (cur, conn):
-            cur.execute(
-                f"UPDATE {table} SET vip_reminded = TRUE WHERE user_id = %s",
-                (user_id,),
-            )
-            conn.commit()
-            log.info(f"[MARK NOTIFIED] ✅ vip_reminded TRUE user_id={user_id}")
-    except Exception as e:
-        log.error(
-            f"[MARK NOTIFIED] ❌ Gagal update user_id={user_id} ({source_bot}): {e}",
-            exc_info=True,
+def mark_vip_notified(user_id: int):
+    with get_db_cursor() as (cur, conn):
+        cur.execute(
+            """
+            UPDATE vip_users
+            SET vip_reminded = TRUE
+            WHERE user_id = %s
+            """,
+            (user_id,),
         )
+        conn.commit()
 
 
 # ===============================
@@ -173,3 +164,17 @@ def reset_vip_notified(user_id: int, source_bot: str = "drac1n", cursor=None):
             f"[RESET NOTIFIED] ❌ Gagal reset user_id={user_id} ({source_bot}): {e}",
             exc_info=True,
         )
+
+
+def mark_vip_reminded(user_id: int):
+    with get_db_cursor() as (cur, conn):
+        cur.execute(
+            """
+            UPDATE vip_users
+            SET vip_reminded = TRUE
+            WHERE user_id = %s
+              AND vip_reminded = FALSE
+            """,
+            (user_id,),
+        )
+        conn.commit()

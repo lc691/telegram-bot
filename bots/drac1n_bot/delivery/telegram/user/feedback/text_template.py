@@ -1,0 +1,16 @@
+FEEDBACK_TEXT = (
+    "📮 <b>Pusat Bantuan DCSTV</b>\n"
+    "<i>Kami menerima berbagai masukan untuk meningkatkan layanan.</i>\n\n"
+    "═══════✦✧✦═══════\n"
+    "🎬 <b>Request Drama</b>\n"
+    "└─ Ajukan drama China yang belum tersedia.\n\n"
+    "🐞 <b>Lapor Masalah</b>\n"
+    "└─ Subtitle rusak, episode error, dll.\n\n"
+    "💡 <b>Saran Fitur</b>\n"
+    "└─ Ide pengembangan fitur.\n\n"
+    "⭐ <b>Rating Layanan</b>\n"
+    "└─ Nilai pengalaman penggunaan.\n\n"
+    "📊 <b>Status Permintaan</b>\n"
+    "└─ Lihat riwayat tiket Anda.\n"
+    "═══════✦✧✦═══════"
+)

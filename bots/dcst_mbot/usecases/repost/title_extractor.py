@@ -1,9 +1,17 @@
 # dcst_mbot/usecases/repost/title_extractor.py
+
+from pyrogram.types import Message
+
 from .title_parser import extract_title_from_message
 
 
-def extract_repost_title(message):
+def extract_repost_title(message: Message) -> dict | None:
+    """
+    Extract repost title metadata.
+    """
+
     title_db, title_display = extract_title_from_message(message)
+
     if not title_db:
         return None
 

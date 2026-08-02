@@ -1,6 +1,29 @@
 import html
 
 from datetime import datetime
+from zoneinfo import ZoneInfo
+
+
+WIB = ZoneInfo("Asia/Jakarta")
+
+
+def _format_wib(dt: datetime | None) -> str:
+    """
+    Format datetime ke WIB.
+    """
+
+    if not dt:
+        return "Tidak diketahui"
+
+    # naive datetime diasumsikan UTC
+    if dt.tzinfo is None:
+        dt = dt.replace(
+            tzinfo=ZoneInfo("UTC")
+        )
+
+    dt = dt.astimezone(WIB)
+
+    return dt.strftime("%d %b %Y %H:%M WIB")
 
 
 def generate_vip_message_to_user(
@@ -17,64 +40,87 @@ def generate_vip_message_to_user(
     bonus: int = 0,
 ) -> str:
     """
-    Membuat pesan aktivasi VIP untuk user (format HTML).
+    Generate pesan aktivasi VIP untuk user.
     """
 
     # =====================================================
-    # Step 1: Format tanggal
+    # STEP 1 — Format datetime
     # =====================================================
-    start_str = vip_start.strftime("%d %b %Y %H:%M") if vip_start else "Tidak diketahui"
-    end_str = vip_end.strftime("%d %b %Y %H:%M") if vip_end else "Tidak diketahui"
+
+    start_str = _format_wib(vip_start)
+    end_str = _format_wib(vip_end)
 
     # =====================================================
-    # Step 2: Escape agar aman di HTML
+    # STEP 2 — Escape HTML
     # =====================================================
+
     first_name_safe = html.escape(first_name)
-    username_safe = html.escape(username) if username else None
     paket_safe = html.escape(paket)
 
+    username_safe = (
+        html.escape(username)
+        if username
+        else None
+    )
+
     # =====================================================
-    # Step 3: Tentukan status aktivasi
+    # STEP 3 — Status label
     # =====================================================
+
     if is_promo_once:
         status_label = "Promo Spesial 🎁"
+
     elif is_extend:
         status_label = "Perpanjangan ♻️"
+
     else:
         status_label = "Aktivasi Baru 🆕"
 
     # =====================================================
-    # Step 4: Susun isi pesan utama
+    # STEP 4 — User identity
     # =====================================================
+
+    if username_safe:
+        user_identity = f"👤 <b>User:</b> @{username_safe}"
+    else:
+        user_identity = f"🆔 <b>User ID:</b> <code>{user_id}</code>"
+
+    # =====================================================
+    # STEP 5 — Build message
+    # =====================================================
+
     lines = [
-        f"🎉 Selamat <b>{first_name_safe}</b>!",
-        (
-            f"👤 User: @{username_safe}"
-            if username_safe
-            else f"🆔 ID: <code>{user_id}</code>"
-        ),
-        f"📦 Paket: <code>{paket_safe}</code>",
-        f"🕒 Aktif: {start_str} → {end_str}",
-        f"🔁 Status: {status_label}",
-        f"⭐ Pembelian ke-{purchases}",
+        "🔥 <b>VIP Berhasil Diaktifkan</b> 🔥",
+        "",
+        f"Halo <b>{first_name_safe}</b> 👋",
+        "🎉 Selamat! akses VIP kamu sekarang sudah aktif.",
+        "",
+        user_identity,
+        "",
+        "═══════✦✧✦═══════",
+        "📄 <b>Detail VIP Kamu</b>",
+        "",
+        f"├─ 📦 <b>Paket VIP  :</b> <code>{paket_safe}</code>",
+        f"├─ ⏳ <b>Aktif Dari :</b> <code>{start_str}</code>",
+        f"└─ 🛑 <b>Berakhir   :</b> <code>{end_str}</code>",
+        "",
+        f"🔁 <b>Status</b> : {status_label}",
+        f"⭐ <b>Pembelian</b> : ke-{max(1, purchases)}",
     ]
 
     if bonus > 0:
-        lines.append(f"🎁 Bonus Hari: +{bonus}")
+        lines.append(
+            f"🎁 <b>Bonus Hari</b> : +{bonus}"
+        )
+    # =====================================================
+    # STEP 6 — Footer
+    # =====================================================
 
-    # =====================================================
-    # Step 5: Tambahkan pemisah & hashtag branding
-    # =====================================================
-    lines.append("━━━━━━━━━━━━━━━━━━━━━━━")
-    hashtags = "#VIP #Streaming"
-    if is_promo_once:
-        hashtags += " #PromoOnce"
-    elif is_extend:
-        hashtags += " #Extend"
-    else:
-        hashtags += " #Baru"
-    hashtags += f" #VIP_{paket_safe.replace(' ', '')}"
-    lines.append(hashtags)
+    lines.extend([
+        "═══════✦✧✦═══════",
+        "",
+        f"#VIP #Streaming #VIP_{paket_safe.replace(' ', '')}",
+    ])
 
     return "\n".join(lines)
 

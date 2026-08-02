@@ -16,4 +16,4 @@ def register_callback_handlers(app: Client) -> None:
     registry.add("auto_comment", register_auto_comment_handler)
     registry.register_all(app)
 
-    log.info("🎉 Callback handlers drac1n_bot didaftarkan.")
+    # log.info("🎉 Callback handlers drac1n_bot didaftarkan.")

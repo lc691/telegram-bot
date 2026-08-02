@@ -173,37 +173,99 @@ async def process_vip_transaction(
     else:
         log.info("[AFFILIATE] Skip (free/promo) user=%s", user_id)
 
+
     # =====================================================
     # STEP 7 — DM user (NON-CRITICAL)
     # =====================================================
+
+    purchases = 1
+    
     try:
         true_bot = resolve_bot(source_bot)
 
         with get_db_cursor() as (cursor, _):
+
+            # Ambil log VIP terbaru + total pembelian
             cursor.execute(
-                "SELECT vip_start, vip_expired FROM users WHERE user_id=%s",
-                (user_id,),
+                """
+                SELECT
+                    paket,
+                    timestamp,
+                    expired_baru,
+                    (
+                        SELECT COUNT(*)
+                        FROM vip_logs
+                        WHERE target_user_id = %s
+                        AND source_bot = %s
+                        AND is_test = false
+                    ) AS purchases
+                FROM vip_logs
+                WHERE target_user_id = %s
+                AND source_bot = %s
+                AND is_test = false
+                ORDER BY id DESC
+                LIMIT 1
+                """,
+                (
+                    user_id,
+                    source_bot,
+                    user_id,
+                    source_bot,
+                ),
             )
-            vip_start, vip_expired = cursor.fetchone()
 
-        msg = build_success_message(
-            tg_user,
-            None,
-            user_id,
-            insert_result,
-            source_bot,
-            vip_start,
-            vip_expired,
-        )
+            row = cursor.fetchone()
 
-        await true_bot.send_message(
-            chat_id=user_id,
-            text=msg,
-            parse_mode=ParseMode.HTML,
-        )
+        # Tidak ada log → skip notif
+        if not row:
+
+            log.warning(
+                "[VIP] No vip_logs found user=%s bot=%s",
+                user_id,
+                source_bot,
+            )
+
+        else:
+
+            paket, vip_start, vip_expired, purchases = row
+
+            log.info(
+                "[VIP] Send DM "
+                "user=%s paket=%s purchases=%s "
+                "start=%s end=%s",
+                user_id,
+                paket,
+                purchases,
+                vip_start,
+                vip_expired,
+            )
+
+            msg = build_success_message(
+                user=tg_user,
+                admin_user=None,
+                vip_user_id=user_id,
+                result={
+                    **insert_result,
+                    "purchases": purchases,
+                },
+                source_bot=source_bot,
+                vip_start=vip_start,
+                vip_end=vip_expired,
+            )
+
+            await true_bot.send_message(
+                chat_id=user_id,
+                text=msg,
+                parse_mode=ParseMode.HTML,
+            )
 
     except Exception as e:
-        log.debug("[VIP] DM skipped user=%s err=%s", user_id, e)
+
+        log.exception(
+            "[VIP] Failed send DM user=%s err=%s",
+            user_id,
+            e,
+        )
 
     # =====================================================
     # STEP 8 — Group announcement (NON-CRITICAL)
@@ -226,6 +288,7 @@ async def process_vip_transaction(
             mode=insert_result["mode"],
             expired_at=insert_result.get("expired_at"),
             old_vip_end=insert_result.get("expired_lama"),
+            purchases=purchases,
         )
 
     except Exception as e:

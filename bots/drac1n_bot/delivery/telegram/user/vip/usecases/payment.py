@@ -57,16 +57,19 @@ async def show_vip_payment_menu(*, event: CallbackQuery, paket: str):
         )
 
         text = (
-            "💳 <b>Langkah Terakhir – Pembayaran VIP</b>\n\n"
-            "🧭 <b>Panduan singkat:</b>\n"
-            "🎁 Di Trakteer, <b>jangan centang Bayar anonim/privat</b>\n"
-            "💾 Setelah bayar, <b>simpan screenshot halaman Trakteer</b> (sebagai cadangan)\n\n"
-            "👇 <b>Klik tombol di bawah untuk melakukan pembayaran</b>"
+            "💳 <b>Langkah Terakhir — Aktivasi VIP</b>\n\n"
+            "═══════✦✧✦═══════\n"
+            "⚡ VIP aktif otomatis setelah pembayaran\n\n"
+            "📌 Saat checkout di Trakteer:\n"
+            "├─ ⚠️Jangan centang <b>Bayar anonim/privat</b>\n"
+            "└─ ⚠️Simpan screenshot pembayaran sebagai cadangan\n"
+            "═══════✦✧✦═══════\n\n"
+            "👇 <b>Klik tombol di bawah untuk bayar & aktifkan VIP</b>"
         )
 
         markup = InlineKeyboardMarkup(
             [
-                [InlineKeyboardButton("💳 BAYAR VIP SEKARANG", url=url)],
+                [InlineKeyboardButton("🚀 AKTIFKAN VIP SEKARANG", url=url)],
                 [InlineKeyboardButton("⬅️ Kembali", callback_data="vip_later")],
             ]
         )

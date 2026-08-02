@@ -21,6 +21,9 @@ from common.utils.memory_monitor import monitor_memory
 from common.utils.ui_session import start_ui_cleanup_loop
 from bots.bot_startup_sequence import start_global_tasks_once
 from common.task.heavy_retention import heavy_retention_loop
+from common.task.trending_auto_refresh import (
+    start_trending_auto_refresh,
+)
 
 # 🔥 WEBHOOK KHUSUS PAYMENT / TRAKTEER
 from common.webhook.trakteer_listener import app as webhook_app
@@ -93,7 +96,7 @@ async def startup_global_services():
     ensure_admins_table()
 
     await admin_cache.force_reload()
-    log.warning("GLOBAL admin_cache id=%s", id(admin_cache))
+    # log.warning("GLOBAL admin_cache id=%s", id(admin_cache))
     admin_cache.start_background_task()
 
     start_ui_cleanup_loop()
@@ -102,7 +105,7 @@ async def startup_global_services():
 # =====================================================
 # BOT STARTUP (TELEGRAM POLLING)
 # =====================================================
-async def start_bots(pool):
+async def start_bots(pool, task_monitor):
     """
     Start semua Telegram bot (POLLING MODE)
     """
@@ -236,12 +239,16 @@ async def run_app():
 
     await startup_global_services()
 
-    bots = await start_bots(pool)
+    bots = await start_bots(pool, task_monitor)
     admin_app = bots[0].app
 
     task_monitor.set_client(admin_app)
 
     stop_events = await start_optional_services(admin_app, task_monitor)
+
+    trending_stop = start_trending_auto_refresh(task_monitor)
+
+    stop_events.append(trending_stop)
 
     # 🔥 START GLOBAL TASK (HANYA 1x)
     start_global_tasks_once(admin_app)
@@ -250,8 +257,6 @@ async def run_app():
     # HEAVY RETENTION (SAFE VERSION)
     # =====================================================
     if pool:
-        from common.task.heavy_retention import heavy_retention_loop
-
         retention_stop = asyncio.Event()
 
         retention_task = asyncio.create_task(

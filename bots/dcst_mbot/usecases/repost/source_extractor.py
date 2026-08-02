@@ -5,37 +5,35 @@ from pyrogram.types import Message
 
 def extract_source_label(message: Message) -> str:
     """
-    Extract source label dari caption (support format baru).
+    Extract source label dari caption Telegram.
 
-    Handle:
-    - 🍿 ReelShort
+    Support:
+    - 🌐 NetShort | 📚 LIST DRAMA
     - 🍿 ReelShort | 📚 LIST DRAMA
-    - HTML <a> tag
+    - HTML / plain text
     """
 
     caption = message.caption or ""
     lines = [line.strip() for line in caption.splitlines()]
 
-    for i, line in enumerate(lines):
-        if line.startswith("💵"):
-            for next_line in lines[i + 1:]:
-                if not next_line:
-                    continue
+    for line in lines:
 
-                # 1. Hilangkan HTML tag (kalau ada)
-                clean = re.sub(r"<.*?>", "", next_line)
+        # Cari line source
+        if "LIST DRAMA" not in line.upper():
+            continue
 
-                # 2. Decode HTML entities
-                clean = unescape(clean)
+        # Hapus HTML
+        clean = re.sub(r"<.*?>", "", line)
 
-                # 3. Ambil sebelum "|"
-                clean = clean.split("|")[0]
+        # Decode HTML entity
+        clean = unescape(clean)
 
-                # 4. Hapus emoji depan
-                clean = re.sub(r"^[^\w]+", "", clean)
+        # Ambil sebelum "|"
+        clean = clean.split("|")[0].strip()
 
-                return clean.strip()
+        # Hapus emoji depan
+        clean = re.sub(r"^[^\w]+", "", clean)
 
-            break
+        return clean.strip()
 
     return ""

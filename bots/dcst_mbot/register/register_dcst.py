@@ -38,4 +38,4 @@ def register_dcst_handlers(app: Client, admin_cache=None) -> None:
     # APPLY TO APP
     # ==================================================
     registry.register_all(app)
-    log.info("🎉 Semua handler bot kelola (dcst_mbot) berhasil didaftarkan.")
+    # log.info("🎉 Semua handler bot kelola (dcst_mbot) berhasil didaftarkan.")

@@ -37,7 +37,7 @@ async def show_main_menu(event, display_name: str = None):
             ],
             [
                 InlineKeyboardButton(
-                    "💬 Grup Diskusi", url="https://t.me/dracinshortgroup"
+                    "💬 Grup Diskusi", url="https://t.me/dcstvgrup"
                 ),
                 InlineKeyboardButton("🆘 Hubungi Admin", url="https://t.me/mimindcstv"),
             ],

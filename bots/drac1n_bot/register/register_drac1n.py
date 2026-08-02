@@ -13,4 +13,4 @@ def register_drac1n_handlers(app: Client, admin_cache: AdminCache) -> None:
     register_admin_handlers(app)
     register_user_cmd_handlers(app, admin_cache)
 
-    log.info("🎉 Semua handler drac1n_bot berhasil didaftarkan.")
+    # log.info("🎉 Semua handler drac1n_bot berhasil didaftarkan.")

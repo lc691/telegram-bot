@@ -172,7 +172,9 @@ TARGET_CHANNELS = [
     "rapidtvv",
     "cubetvx",
     "veloloxx",
-    "dramanova",
+    "dramanovax",
+    "starshortx",
+    "pinedramax",
 ]
 
 SOURCE_CHANNEL_MAP = {
@@ -198,6 +200,8 @@ SOURCE_CHANNEL_MAP = {
     "cubetv": ["cubetvx", "listdramaglow"],
     "velolo": ["veloloxx", "listdramaglow"],
     "dramanova": ["dramanovax", "listdramaglow"],
+    "starshort": ["starshortx", "listdramaglow"],
+    "pinedrama": ["pinedramax", "listdramaglow"],
 }
 
 REQUIRED_CHANNELS: List[Tuple[str, str]] = [

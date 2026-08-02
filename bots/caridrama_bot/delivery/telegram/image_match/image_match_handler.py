@@ -25,6 +25,7 @@ def register_image_match_handler(app: Client):
         #     → TAMPILKAN TOMBOL SAJA
         # ==================================================
         if message.sender_chat and not message.from_user:
+
             log.info(
                 "[IMG_MATCH] auto_post detected chat=%s sender_chat=%s",
                 message.chat.id,
@@ -35,16 +36,27 @@ def register_image_match_handler(app: Client):
                 [
                     [
                         InlineKeyboardButton(
-                            "🔍 Cari Drama", switch_inline_query_current_chat=""
+                            "🔍 Cari Drama",
+                            switch_inline_query_current_chat="",
                         )
                     ]
                 ]
             )
 
             await message.reply_text(
-                "📺 Mau cari drama? Klik tombol di bawah ini:",
+                (
+                    "🎬 <b>Gambar berhasil diterima!</b>\n\n"
+                    "🔍 Untuk mencari drama, tekan tombol <b>CARI</b> di bawah.\n"
+                    "Lalu masukkan judul atau kata kunci yang kamu inginkan.\n\n"
+                    "✨ Bisa juga langsung lewat inline search:\n"
+                    "<code>@caridrama_bot judul drama</code>\n\n"
+                    "📺 Selamat mencari tontonan favoritmu 👇"
+                ),
                 reply_markup=keyboard,
+                parse_mode=ParseMode.HTML,
+                disable_web_page_preview=True,
             )
+
             return
 
         # ==================================================

@@ -156,7 +156,7 @@ def get_all_vips(bot: str = "drac1n"):
         return []
 
 
-def get_expiring_vips(
+def get_expiring_vips_OLD(
     bot: str = "drac1n", days_ahead: int = 3, offset: int = 0, limit: int = 50
 ):
     """
@@ -190,3 +190,25 @@ def get_expiring_vips(
     except Exception as e:
         log.error(f"[EXPIRING_VIPS] Gagal ambil data VIP dari {table}: {e}")
         return []
+
+def get_expiring_vips(days_ahead=2, limit=50, offset=0):
+    now = datetime.now(timezone.utc)
+    upper = now + timedelta(days=days_ahead)
+
+    with get_db_cursor() as (cursor, _):
+        cursor.execute(
+            """
+            SELECT
+                user_id,
+                paket,
+                end_date,
+                vip_reminded
+            FROM vip_users
+            WHERE status = 'active'
+            AND end_date BETWEEN %s AND %s
+            ORDER BY end_date ASC
+            LIMIT %s OFFSET %s
+            """,
+            (now, upper, limit, offset),
+        )
+        return cursor.fetchall()
