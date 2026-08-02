@@ -1,7 +1,7 @@
 from datetime import datetime, timedelta, date as date_cls
 from zoneinfo import ZoneInfo
 from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup
-from ....user.common.konstanta import MAX_PAGE
+from bots.drac1n_bot.delivery.telegram.user.common.konstanta import MAX_PAGE
 
 # ===============================
 # TIMEZONE

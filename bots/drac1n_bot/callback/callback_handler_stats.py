@@ -4,11 +4,11 @@ from pyrogram.types import CallbackQuery
 from common.utils.admin_cache import admin_cache
 from configs.logging_setup import log
 
-from ..callback.stats.film_detail import show_film_detail
-from ..callback.stats.film_selector import show_film_selector
-from ..callback.stats.top_films import show_top_films
-from ..callback.stats.top_users import show_top_users
-from ..callback.stats.vip_vs_free import show_vip_vs_free
+from bots.drac1n_bot.callback.stats.film_detail import show_film_detail
+from bots.drac1n_bot.callback.stats.film_selector import show_film_selector
+from bots.drac1n_bot.callback.stats.top_films import show_top_films
+from bots.drac1n_bot.callback.stats.top_users import show_top_users
+from bots.drac1n_bot.callback.stats.vip_vs_free import show_vip_vs_free
 
 STATS_REGEX = r"^stat_(top_films|top_users|vip_vs_free|detail_menu)$"
 

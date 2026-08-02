@@ -4,7 +4,7 @@ from pyrogram.types import Message
 from config import DB_DRAMA
 from configs.logging_setup import log
 
-from .....usecases.admin.file.new_file_logic import (
+from bots.drac1n_bot.usecases.admin.file.new_file_logic import (
     process_new_file,
 )
 

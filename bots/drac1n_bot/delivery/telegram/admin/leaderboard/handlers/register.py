@@ -1,7 +1,7 @@
 from pyrogram import Client
 
-from .commands import register_leaderboard_command_handler
-from .callbacks import register_leaderboard_callback
+from bots.drac1n_bot.delivery.telegram.admin.leaderboard.handlers.commands import register_leaderboard_command_handler
+from bots.drac1n_bot.delivery.telegram.admin.leaderboard.handlers.callbacks import register_leaderboard_callback
 
 
 def register_leaderboard(app: Client) -> None:

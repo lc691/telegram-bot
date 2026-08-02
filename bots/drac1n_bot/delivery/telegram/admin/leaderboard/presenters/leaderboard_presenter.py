@@ -1,6 +1,11 @@
-from .leaderboard_formatter import format_vip_leaderboard
-from .leaderboard_keyboard import leaderboard_keyboard
-from ....user.common.konstanta import PAGE_SIZE
+from bots.drac1n_bot.delivery.telegram.admin.leaderboard.presenters.leaderboard_formatter import (
+    format_vip_leaderboard
+)
+
+from bots.drac1n_bot.delivery.telegram.admin.leaderboard.presenters.leaderboard_keyboard import (
+    leaderboard_keyboard)
+
+from bots.drac1n_bot.delivery.telegram.user.common.konstanta import PAGE_SIZE
 
 
 def build_leaderboard_text(*, data, period, page, total, date: str | None):

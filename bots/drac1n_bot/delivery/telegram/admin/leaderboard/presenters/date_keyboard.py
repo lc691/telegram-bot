@@ -1,7 +1,7 @@
 from datetime import date as date_cls
 from calendar import monthrange
 from pyrogram.types import InlineKeyboardMarkup, InlineKeyboardButton
-from ..utils.timezone import today_wib
+from bots.drac1n_bot.delivery.telegram.admin.leaderboard.utils.timezone import today_wib
 
 
 # ===============================

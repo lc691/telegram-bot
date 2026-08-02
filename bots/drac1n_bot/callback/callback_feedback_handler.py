@@ -1,9 +1,9 @@
 from pyrogram import Client, filters
 
-from ..delivery.telegram.user.feedback.feedback_callback_handler import (
+from bots.drac1n_bot.delivery.telegram.user.feedback.feedback_callback_handler import (
     feedback_callback_handler,
 )
-
+from configs.logging_setup import log
 
 def register_feedback_callback(app: Client) -> None:
 

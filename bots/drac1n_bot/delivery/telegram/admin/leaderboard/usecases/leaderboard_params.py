@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 from datetime import datetime
-from ..utils.timezone import today_wib
+from bots.drac1n_bot.delivery.telegram.admin.leaderboard.utils.timezone import today_wib
 
 MAX_PAGE = 50
 

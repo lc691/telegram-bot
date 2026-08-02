@@ -10,12 +10,11 @@ from pyrogram.types import Message
 from configs.logging_setup import log
 from common.utils.admin_cache import admin_cache
 
-from .....repository.posting.post_show_utils import (
+from bots.drac1n_bot.repository.posting.post_show_utils import (
     fetch_show_by_id,
     search_show_by_title,
     parse_batch_ids,
 )
-
 
 from .....usecases.admin.posting.post_show_flow import post_show_flow
 

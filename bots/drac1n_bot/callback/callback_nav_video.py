@@ -6,9 +6,9 @@ from configs.logging_setup import log
 from common.utils.admin_cache import admin_cache
 
 from db.connect import get_dict_cursor
-from ..delivery.telegram.user.services.user_service import UserAccessService
-from ..delivery.telegram.user.file.services.cache import get_navigation_info_cached
-from ..delivery.telegram.user.file.usecases.access_file_flow import access_file_flow
+from bots.drac1n_bot.delivery.telegram.user.services.user_service import UserAccessService
+from bots.drac1n_bot.delivery.telegram.user.file.services.cache import get_navigation_info_cached
+from bots.drac1n_bot.delivery.telegram.user.file.usecases.access_file_flow import access_file_flow
 
 
 def register_nav_video_callback(app):

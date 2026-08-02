@@ -4,9 +4,14 @@ from pyrogram.types import CallbackQuery
 
 from configs.logging_setup import log
 
-from ..usecases.leaderboard_params import parse_leaderboard_callback
-from ..usecases.leaderboard_flow import show_leaderboard
-from ..presenters.date_keyboard import (
+from bots.drac1n_bot.delivery.telegram.admin.leaderboard.usecases.leaderboard_params import (
+    parse_leaderboard_callback
+)
+
+from bots.drac1n_bot.delivery.telegram.admin.leaderboard.usecases.leaderboard_flow import (
+    show_leaderboard
+)
+from bots.drac1n_bot.delivery.telegram.admin.leaderboard.presenters.date_keyboard import (
     month_picker_keyboard,
     day_picker_keyboard,
 )

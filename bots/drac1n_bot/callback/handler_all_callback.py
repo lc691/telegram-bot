@@ -1,13 +1,13 @@
 from pyrogram import Client
 
-from ..handlers.admin.callback_handler_admin import register_admin_callback
-from .callback_broadcast import register_broadcast_callback
-from .callback_dashboard import register_dashboard_handler
-from .callback_handler_common import register_common_callbacks
-from .callback_handler_stats import register_stats_callback
-from .callback_handler_vip import register_vip_callback
-from .callback_nav_video import register_nav_video_callback
-from .callback_feedback_handler import register_feedback_callback
+from bots.drac1n_bot.handlers.admin.callback_handler_admin import register_admin_callback
+from bots.drac1n_bot.callback.callback_broadcast import register_broadcast_callback
+from bots.drac1n_bot.callback.callback_dashboard import register_dashboard_handler
+from bots.drac1n_bot.callback.callback_handler_common import register_common_callbacks
+from bots.drac1n_bot.callback.callback_handler_stats import register_stats_callback
+from bots.drac1n_bot.callback.callback_handler_vip import register_vip_callback
+from bots.drac1n_bot.callback.callback_nav_video import register_nav_video_callback
+from bots.drac1n_bot.callback.callback_feedback_handler import register_feedback_callback
 
 
 # file: register_all_callbacks.py

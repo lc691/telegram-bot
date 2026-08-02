@@ -5,18 +5,18 @@ from pyrogram.errors import MessageNotModified
 
 from configs.logging_setup import log
 
-from ..presenters.leaderboard_presenter import (
+from bots.drac1n_bot.delivery.telegram.admin.leaderboard.presenters.leaderboard_presenter import (
     build_leaderboard_text,
     build_leaderboard_keyboard,
 )
-from ..repository.leaderboard_repository import (
+from bots.drac1n_bot.delivery.telegram.admin.leaderboard.repository.leaderboard_repository import (
     fetch_vip_leaderboard,
     fetch_vip_total,
 )
 
-from ....user.common.display_name import get_display_name
-from ....user.common.konstanta import PAGE_SIZE, MAX_PAGE
-from ..utils.timezone import today_wib
+from bots.drac1n_bot.delivery.telegram.user.common.display_name import get_display_name
+from bots.drac1n_bot.delivery.telegram.user.common.konstanta import PAGE_SIZE, MAX_PAGE
+from bots.drac1n_bot.delivery.telegram.admin.leaderboard.utils.timezone import today_wib
 
 
 VALID_PERIODS = {"daily", "weekly", "monthly", "all"}

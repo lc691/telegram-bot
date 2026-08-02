@@ -1,6 +1,6 @@
 from datetime import datetime
 from zoneinfo import ZoneInfo
-from ....user.common.konstanta import MAX_PAGE
+from bots.drac1n_bot.delivery.telegram.user.common.konstanta import MAX_PAGE
 
 WIB = ZoneInfo("Asia/Jakarta")
 
